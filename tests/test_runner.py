@@ -89,6 +89,13 @@ def test_full_pipeline():
     print("✅ Full pipeline test passed\n")
 
 
+# ⚠️ TEMPORARY — forces a failure to verify self_heal job triggers correctly.
+# Remove this function once you've confirmed the self-heal pipeline works end-to-end.
+def test_intentional_failure():
+    print("💥 Intentionally failing to trigger self_heal job...")
+    assert False, "Forcing a failure to trigger self-heal"
+
+
 # ✅ MAIN RUNNER
 if __name__ == "__main__":
     print("\n🧪 RUNNING ALL TESTS...\n")
