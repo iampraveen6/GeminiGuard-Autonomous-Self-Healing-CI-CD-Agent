@@ -38,8 +38,11 @@ jobs:
           TEST_MODE: "true"
         run: |
           source venv/bin/activate
+          set +e
           pytest > logs.txt
-          if [ $? -ne 0 ]; then
+          EXIT_CODE=$?
+          set -e
+          if [ $EXIT_CODE -ne 0 ]; then
             echo "failed=true" >> $GITHUB_OUTPUT
           else
             echo "failed=false" >> $GITHUB_OUTPUT
@@ -47,6 +50,7 @@ jobs:
 
       # ✅ Upload logs for next job
       - name: ✅ Upload logs
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-logs
