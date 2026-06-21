@@ -1,83 +1,97 @@
-GeminiGuard: Autonomous Self-Healing CI/CD Agent
+# GeminiGuard: Autonomous Self-Healing CI/CD Agent
 
+```
  ██████╗ ███████╗███╗   ███╗██╗███╗   ██╗██╗ ██████╗ ██╗   ██╗ █████╗ ██████╗ ██████╗ 
 ██╔════╝ ██╔════╝████╗ ████║██║████╗  ██║██║██╔════╝ ██║   ██║██╔══██╗██╔══██╗██╔══██╗
 ██║  ███╗█████╗  ██╔████╔██║██║██╔██╗ ██║██║██║  ███╗██║   ██║███████║██████╔╝██║  ██║
 ██║   ██║██╔══╝  ██║╚██╔╝██║██║██║╚██╗██║██║██║   ██║██║   ██║██╔══██║██╔══██╗██║  ██║
 ╚██████╔╝███████╗██║ ╚═╝ ██║██║██║ ╚████║██║╚██████╔╝╚██████╔╝██║  ██║██║  ██║██████╔╝
- ╚═════╝ ╚══════╝╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝
+ ╚═════╝ ╚══════╝╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ 
+```
 
-🛡️ Your CI/CD Pipeline's Autonomous Guardian
+🛡️ **Your CI/CD Pipeline's Autonomous Guardian**
 
-Show Image
-Show Image
-Show Image
-Show Image
-Show Image
-Show Image
+[![Python](https://img.shields.io/badge/Python-3.9+-blue?style=flat-square)](https://www.python.org/)
+[![Powered by Google Gemini](https://img.shields.io/badge/Powered%20by-Google%20Gemini%202.5%20Pro-orange?style=flat-square)](https://ai.google.dev/)
+[![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
+[![GitHub Issues](https://img.shields.io/github/issues/iampraveen6/GeminiGuard-Autonomous-Self-Healing-CI-CD-Agent?style=flat-square)](https://github.com/iampraveen6/GeminiGuard-Autonomous-Self-Healing-CI-CD-Agent/issues)
+[![GitHub Forks](https://img.shields.io/github/forks/iampraveen6/GeminiGuard-Autonomous-Self-Healing-CI-CD-Agent?style=flat-square)](https://github.com/iampraveen6/GeminiGuard-Autonomous-Self-Healing-CI-CD-Agent/fork)
+[![GitHub Stars](https://img.shields.io/github/stars/iampraveen6/GeminiGuard-Autonomous-Self-Healing-CI-CD-Agent?style=flat-square)](https://github.com/iampraveen6/GeminiGuard-Autonomous-Self-Healing-CI-CD-Agent/stargazers)
 
-Detects failures. Diagnoses root causes. Generates fixes. Opens PRs. Learns from every mistake.
+**Detects failures. Diagnoses root causes. Generates fixes. Opens PRs. Learns from every mistake.**
 
-📋 Table of Contents
+## 📋 Table of Contents
 
+- [Why GeminiGuard?](#why-geminiguard)
+- [Key Features](#key-features)
+- [How It Works](#how-it-works)
+- [Architecture](#architecture)
+- [Prerequisites](#prerequisites)
+- [Quick Start](#quick-start)
+- [Configuration](#configuration)
+- [Cost Transparency](#cost-transparency)
+- [Integrations](#integrations)
+- [Dashboard](#dashboard)
+- [Usage Examples](#usage-examples)
+- [Troubleshooting](#troubleshooting)
+- [FAQ](#faq)
+- [Contributing](#contributing)
+- [Roadmap](#roadmap)
+- [License](#license)
+- [Star History](#star-history)
 
-Why GeminiGuard?
-Key Features
-How It Works
-Architecture
-Prerequisites
-Quick Start
-Configuration
-Cost Transparency
-Integrations
-Dashboard
-Usage Examples
-Troubleshooting
-FAQ
-Contributing
-Roadmap
-License
-Star History
+---
 
+## Why GeminiGuard?
 
-
-Why GeminiGuard?
-
-The Problem
+### The Problem
 
 CI/CD pipelines fail. Every. Single. Day. And when they do, someone has to:
 
+1. 🚨 Get paged at 2 AM
+2. 📖 Dig through thousands of log lines
+3. 🤔 Guess what went wrong
+4. 🔧 Manually patch the issue
+5. 🔄 Watch it break again next week
 
-🚨 Get paged at 2 AM
-📖 Dig through thousands of log lines
-🤔 Guess what went wrong
-🔧 Manually patch the issue
-🔄 Watch it break again next week
-
-
-The Solution
+### The Solution
 
 GeminiGuard automates the entire debugging workflow:
 
-ChallengeGeminiGuard ApproachScroll through 10,000 lines of logsAnalyzes logs, screenshots, and Docker state in secondsGuess the root causePinpoints the exact issue with confidence scoringManually patch and prayGenerates fixes, validates them, and opens PRsSame bug breaks again next weekRemembers every failure and prevents regressions
+| Challenge | GeminiGuard Approach |
+|-----------|---------------------|
+| Scroll through 10,000 lines of logs | Analyzes logs, screenshots, and Docker state in seconds |
+| Guess the root cause | Pinpoints the exact issue with confidence scoring |
+| Manually patch and pray | Generates fixes, validates them, and opens PRs |
+| Same bug breaks again next week | Remembers every failure and prevents regressions |
 
-Unlike other tools that only comment on PRs, GeminiGuard:
+**Unlike other tools** that only comment on PRs, GeminiGuard:
+- ✅ Creates actual fix branches and opens real PRs
+- ✅ Tracks every API dollar spent with real-time cost transparency
+- ✅ Builds a searchable memory of past failures to improve over time
+- ✅ Never pushes to main without validation
 
+---
 
-✅ Creates actual fix branches and opens real PRs
-✅ Tracks every API dollar spent with real-time cost transparency
-✅ Builds a searchable memory of past failures to improve over time
-✅ Never pushes to main without validation
+## Key Features
 
+| Feature | Description |
+|---------|-------------|
+| 🔍 **Multi-Modal Analysis** | Reads logs, test outputs, Docker states, and UI screenshots |
+| 🤖 **Autonomous PR Generation** | Creates fix branches and opens pull requests automatically |
+| 📊 **Smart Fix Ranking** | Ranks fixes by confidence score, risk level, and blast radius |
+| 🔐 **Safe Execution** | Dry-run mode, rollback-ready, never auto-pushes to main |
+| 🧠 **Self-Learning Memory** | Vector DB stores every failure → fix pair for future prevention |
+| 💰 **Cost Transparency** | Real-time API cost tracking per operation, per pipeline |
+| 📈 **Streamlit Dashboard** | Live observability into agent decisions and pipeline health |
+| 🔌 **Slack & Jira Integration** | Instant alerts, automatic ticket creation, threaded discussions |
+| 🛠️ **Multi-CI Support** | Works with GitHub Actions, GitLab CI, and more (expanding) |
 
+---
 
-Key Features
+## How It Works
 
-FeatureDescription🔍 Multi-Modal AnalysisReads logs, test outputs, Docker states, and UI screenshots🤖 Autonomous PR GenerationCreates fix branches and opens pull requests automatically📊 Smart Fix RankingRanks fixes by confidence score, risk level, and blast radius🔐 Safe ExecutionDry-run mode, rollback-ready, never auto-pushes to main🧠 Self-Learning MemoryVector DB stores every failure → fix pair for future prevention💰 Cost TransparencyReal-time API cost tracking per operation, per pipeline📈 Streamlit DashboardLive observability into agent decisions and pipeline health🔌 Slack & Jira IntegrationInstant alerts, automatic ticket creation, threaded discussions🛠️ Multi-CI SupportWorks with GitHub Actions, GitLab CI, and more (expanding)
-
-
-How It Works
-
+```
 Pipeline Fails
     ↓
 [1] Failure Detector triggers
@@ -102,112 +116,95 @@ Pipeline Fails
     └→ Try next strategy or escalate to human
     ↓
 [9] Store learnings in memory for future reference
+```
 
+---
 
-Architecture
+## Architecture
 
-#mermaid-rmc-r1 { font-family: "Anthropic Sans", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 16px; fill: rgb(229, 229, 229); }
-#mermaid-rmc-r1 .edge-animation-slow { stroke-dashoffset: 900; animation: 50s linear 0s infinite normal none running dash; stroke-linecap: round; stroke-dasharray: 9, 5 !important; }
-#mermaid-rmc-r1 .edge-animation-fast { stroke-dashoffset: 900; animation: 20s linear 0s infinite normal none running dash; stroke-linecap: round; stroke-dasharray: 9, 5 !important; }
-#mermaid-rmc-r1 .error-icon { fill: rgb(204, 120, 92); }
-#mermaid-rmc-r1 .error-text { fill: rgb(51, 135, 163); stroke: rgb(51, 135, 163); }
-#mermaid-rmc-r1 .edge-thickness-normal { stroke-width: 1px; }
-#mermaid-rmc-r1 .edge-thickness-thick { stroke-width: 3.5px; }
-#mermaid-rmc-r1 .edge-pattern-solid { stroke-dasharray: 0; }
-#mermaid-rmc-r1 .edge-thickness-invisible { stroke-width: 0; fill: none; }
-#mermaid-rmc-r1 .edge-pattern-dashed { stroke-dasharray: 3; }
-#mermaid-rmc-r1 .edge-pattern-dotted { stroke-dasharray: 2; }
-#mermaid-rmc-r1 .marker { fill: rgb(161, 161, 161); stroke: rgb(161, 161, 161); }
-#mermaid-rmc-r1 .marker.cross { stroke: rgb(161, 161, 161); }
-#mermaid-rmc-r1 svg { font-family: "Anthropic Sans", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 16px; }
-#mermaid-rmc-r1 p { margin: 0px; }
-#mermaid-rmc-r1 .label { font-family: "Anthropic Sans", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color: rgb(229, 229, 229); }
-#mermaid-rmc-r1 .cluster-label text { fill: rgb(51, 135, 163); }
-#mermaid-rmc-r1 .cluster-label span { color: rgb(51, 135, 163); }
-#mermaid-rmc-r1 .cluster-label span p { background-color: transparent; }
-#mermaid-rmc-r1 .label text, #mermaid-rmc-r1 span { fill: rgb(229, 229, 229); color: rgb(229, 229, 229); }
-#mermaid-rmc-r1 .node rect, #mermaid-rmc-r1 .node circle, #mermaid-rmc-r1 .node ellipse, #mermaid-rmc-r1 .node polygon, #mermaid-rmc-r1 .node path { fill: transparent; stroke: rgb(161, 161, 161); stroke-width: 1px; }
-#mermaid-rmc-r1 .rough-node .label text, #mermaid-rmc-r1 .node .label text, #mermaid-rmc-r1 .image-shape .label, #mermaid-rmc-r1 .icon-shape .label { text-anchor: middle; }
-#mermaid-rmc-r1 .node .katex path { fill: rgb(0, 0, 0); stroke: rgb(0, 0, 0); stroke-width: 1px; }
-#mermaid-rmc-r1 .rough-node .label, #mermaid-rmc-r1 .node .label, #mermaid-rmc-r1 .image-shape .label, #mermaid-rmc-r1 .icon-shape .label { text-align: center; }
-#mermaid-rmc-r1 .node.clickable { cursor: pointer; }
-#mermaid-rmc-r1 .root .anchor path { stroke-width: 0; stroke: rgb(161, 161, 161); fill: rgb(161, 161, 161) !important; }
-#mermaid-rmc-r1 .arrowheadPath { fill: rgb(11, 11, 11); }
-#mermaid-rmc-r1 .edgePath .path { stroke: rgb(161, 161, 161); stroke-width: 1px; }
-#mermaid-rmc-r1 .flowchart-link { stroke: rgb(161, 161, 161); fill: none; }
-#mermaid-rmc-r1 .edgeLabel { background-color: transparent; text-align: center; }
-#mermaid-rmc-r1 .edgeLabel p { background-color: transparent; }
-#mermaid-rmc-r1 .edgeLabel rect { opacity: 0.5; background-color: transparent; fill: transparent; }
-#mermaid-rmc-r1 .labelBkg { background-color: rgba(0, 0, 0, 0.5); }
-#mermaid-rmc-r1 .cluster rect { fill: rgb(204, 120, 92); stroke: rgb(138, 115, 107); stroke-width: 1px; }
-#mermaid-rmc-r1 .cluster text { fill: rgb(51, 135, 163); }
-#mermaid-rmc-r1 .cluster span { color: rgb(51, 135, 163); }
-#mermaid-rmc-r1 div.mermaidTooltip { position: absolute; text-align: center; max-width: 200px; padding: 2px; font-family: "Anthropic Sans", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 12px; background: rgb(204, 120, 92); border: 1px solid rgb(138, 115, 107); border-radius: 2px; pointer-events: none; z-index: 100; }
-#mermaid-rmc-r1 .flowchartTitleText { text-anchor: middle; font-size: 18px; fill: rgb(229, 229, 229); }
-#mermaid-rmc-r1 rect.text { fill: none; stroke-width: 0; }
-#mermaid-rmc-r1 .icon-shape, #mermaid-rmc-r1 .image-shape { background-color: transparent; text-align: center; }
-#mermaid-rmc-r1 .icon-shape p, #mermaid-rmc-r1 .image-shape p { background-color: transparent; padding: 2px; }
-#mermaid-rmc-r1 .icon-shape .label rect, #mermaid-rmc-r1 .image-shape .label rect { opacity: 0.5; background-color: transparent; fill: transparent; }
-#mermaid-rmc-r1 .label-icon { display: inline-block; height: 1em; overflow: visible; vertical-align: -0.125em; }
-#mermaid-rmc-r1 .node .label-icon path { fill: currentcolor; stroke: revert; stroke-width: revert; }
-#mermaid-rmc-r1 .node .neo-node { stroke: rgb(161, 161, 161); }
-#mermaid-rmc-r1 [data-look="neo"].node rect, #mermaid-rmc-r1 [data-look="neo"].cluster rect, #mermaid-rmc-r1 [data-look="neo"].node polygon { stroke: url("#mermaid-rmc-r1-gradient"); filter: drop-shadow(rgb(185, 185, 185) 1px 2px 2px); }
-#mermaid-rmc-r1 [data-look="neo"].node path { stroke: url("#mermaid-rmc-r1-gradient"); stroke-width: 1px; }
-#mermaid-rmc-r1 [data-look="neo"].node .outer-path { filter: drop-shadow(rgb(185, 185, 185) 1px 2px 2px); }
-#mermaid-rmc-r1 [data-look="neo"].node .neo-line path { stroke: rgb(161, 161, 161); filter: none; }
-#mermaid-rmc-r1 [data-look="neo"].node circle { stroke: url("#mermaid-rmc-r1-gradient"); filter: drop-shadow(rgb(185, 185, 185) 1px 2px 2px); }
-#mermaid-rmc-r1 [data-look="neo"].node circle .state-start { fill: rgb(0, 0, 0); }
-#mermaid-rmc-r1 [data-look="neo"].icon-shape .icon { fill: url("#mermaid-rmc-r1-gradient"); filter: drop-shadow(rgb(185, 185, 185) 1px 2px 2px); }
-#mermaid-rmc-r1 [data-look="neo"].icon-shape .icon-neo path { stroke: url("#mermaid-rmc-r1-gradient"); filter: drop-shadow(rgb(185, 185, 185) 1px 2px 2px); }
-#mermaid-rmc-r1 :root { --mermaid-font-family: "Anthropic Sans",system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }YesYesNoNoCI/CD Failure EventFailure DetectorCollect Logs + Screenshots+ Docker StateGemini 2.5 Pro AnalysisEngineRoot Cause Identified?Generate Fix StrategiesRank by Confidence & RiskValidation Pass?Create Fix BranchOpen Pull RequestStore in Memory DBUpdate DashboardNotify Slack/JiraTry Next StrategyEscalate to Human ReviewEnd: Self-Healing Complete
+```mermaid
+graph TD
+    A[CI/CD Failure Event] --> B[Failure Detector]
+    B --> C[Collect Logs + Screenshots + Docker State]
+    C --> D[Gemini 2.5 Pro Analysis Engine]
+    D --> E{Root Cause Identified?}
+    E -->|Yes| F[Generate Fix Strategies]
+    F --> G[Rank by Confidence & Risk]
+    G --> H{Validation Pass?}
+    H -->|Yes| I[Create Fix Branch]
+    I --> J[Open Pull Request]
+    J --> K[Store in Memory DB]
+    K --> L[Update Dashboard]
+    L --> M[Notify Slack/Jira]
+    H -->|No| N[Try Next Strategy]
+    N --> H
+    E -->|No| O[Escalate to Human Review]
+    M --> P[End: Self-Healing Complete]
+    O --> P
+    
+    style A fill:#ff6b6b
+    style P fill:#51cf66
+    style D fill:#4ecdc4
+    style K fill:#95e1d3
+```
 
+---
 
-Prerequisites
+## Prerequisites
 
 Before you begin, ensure you have:
 
+- **Python 3.9 or higher**
+- **Git** (for cloning and PR operations)
+- **Google Gemini API Key** (free tier available at [ai.google.dev](https://ai.google.dev/))
+- **GitHub Personal Access Token** (for PR creation) or **GitLab token** (for GitLab CI)
+- **Docker** (optional, for Docker state analysis)
+- **Slack Webhook URL** (optional, for notifications)
+- **Jira credentials** (optional, for ticket creation)
 
-Python 3.9 or higher
-Git (for cloning and PR operations)
-Google Gemini API Key (free tier available at ai.google.dev)
-GitHub Personal Access Token (for PR creation) or GitLab token (for GitLab CI)
-Docker (optional, for Docker state analysis)
-Slack Webhook URL (optional, for notifications)
-Jira credentials (optional, for ticket creation)
+### Get Your API Keys
 
+1. **Google Gemini API**: Visit [ai.google.dev](https://ai.google.dev/), sign in with your Google account, and create an API key (free tier includes 60 requests/minute)
 
-Get Your API Keys
+2. **GitHub Token**: Go to Settings → Developer settings → Personal access tokens → Generate new token with `repo` and `workflow` scopes
 
+3. **Slack Webhook** (optional): Create an incoming webhook in your Slack workspace
 
-Google Gemini API: Visit ai.google.dev, sign in with your Google account, and create an API key (free tier includes 60 requests/minute)
-GitHub Token: Go to Settings → Developer settings → Personal access tokens → Generate new token with repo and workflow scopes
-Slack Webhook (optional): Create an incoming webhook in your Slack workspace
-Jira API Token (optional): Generate from your Jira account settings
+4. **Jira API Token** (optional): Generate from your Jira account settings
 
+---
 
+## Quick Start
 
-Quick Start
+### 1. Clone the Repository
 
-1. Clone the Repository
-
-bashgit clone https://github.com/iampraveen6/GeminiGuard-Autonomous-Self-Healing-CI-CD-Agent.git
+```bash
+git clone https://github.com/iampraveen6/GeminiGuard-Autonomous-Self-Healing-CI-CD-Agent.git
 cd GeminiGuard-Autonomous-Self-Healing-CI-CD-Agent
+```
 
-2. Install Dependencies
+### 2. Install Dependencies
 
-bashpip install -r requirements.txt
+```bash
+pip install -r requirements.txt
+```
 
 Or with dev dependencies for contributions:
 
-bashpip install -r requirements-dev.txt
+```bash
+pip install -r requirements-dev.txt
+```
 
-3. Configure Environment Variables
+### 3. Configure Environment Variables
 
-bashcp .env.example .env
+```bash
+cp .env.example .env
+```
 
-Edit .env with your credentials:
+Edit `.env` with your credentials:
 
-env# ========== REQUIRED ==========
+```env
+# ========== REQUIRED ==========
 GEMINI_API_KEY=your_gemini_api_key_here
 GITHUB_TOKEN=ghp_your_github_token_here
 GITHUB_REPO_OWNER=your_github_username
@@ -231,10 +228,12 @@ GEMINIGUARD_LOG_LEVEL=INFO            # DEBUG, INFO, WARNING, ERROR
 # Advanced
 GEMINIGUARD_MEMORY_TYPE=chromadb      # chromadb, weaviate, pinecone
 GEMINIGUARD_MAX_PARALLEL_FIXES=3      # Number of fix strategies to try in parallel
+```
 
-4. Run Your First Analysis
+### 4. Run Your First Analysis
 
-bash# Analyze a failed CI log file
+```bash
+# Analyze a failed CI log file
 python -m geminiguard analyze --log-file ./sample-failure.log --screenshot ./error.png
 
 # Or start the dashboard (opens at http://localhost:8501)
@@ -242,15 +241,18 @@ streamlit run dashboard/app.py
 
 # Or run as a background service
 python -m geminiguard daemon
+```
 
+---
 
-Configuration
+## Configuration
 
-GitHub Actions Integration
+### GitHub Actions Integration
 
-Add this workflow file to .github/workflows/geminiguard.yml:
+Add this workflow file to `.github/workflows/geminiguard.yml`:
 
-yamlname: GeminiGuard Self-Healing
+```yaml
+name: GeminiGuard Self-Healing
 
 on:
   workflow_run:
@@ -288,12 +290,14 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+```
 
-GitLab CI Integration
+### GitLab CI Integration
 
-Add this to .gitlab-ci.yml:
+Add this to `.gitlab-ci.yml`:
 
-yamlgeminiguard_heal:
+```yaml
+geminiguard_heal:
   stage: .post
   image: python:3.11
   script:
@@ -306,12 +310,14 @@ yamlgeminiguard_heal:
     reports:
       dotenv: geminiguard-results.env
   allow_failure: true
+```
 
-Advanced Configuration
+### Advanced Configuration
 
-Create a geminiguard.yaml for fine-grained control:
+Create a `geminiguard.yaml` for fine-grained control:
 
-yamlagent:
+```yaml
+agent:
   confidence_threshold: 0.85
   max_cost_usd: 5.00
   dry_run: false
@@ -339,52 +345,67 @@ integrations:
     enabled: true
     target_branch: main
     require_approval: false  # Set true for prod
+```
 
+---
 
-Cost Transparency
+## Cost Transparency
 
-All API calls are logged with real-time cost tracking. Costs shown are based on Google Gemini 2.5 Pro pricing (June 2026).
+All API calls are logged with real-time cost tracking. Costs shown are based on **Google Gemini 2.5 Pro pricing (June 2026)**.
 
-Typical Operation Costs
+### Typical Operation Costs
 
-OperationInput TokensOutput TokensEst. Cost (USD)Log Analysis (10K lines)~15K~2K$0.08Screenshot + Log Diagnosis~25K (multimodal)~3K$0.15Fix Generation (single strategy)~8K~4K$0.06Fix Ranking (3 strategies)~20K~1K$0.05Full Pipeline (avg. failure)~50K~10K~$0.35Complex Multi-File Bug~100K~20K~$0.75
+| Operation | Input Tokens | Output Tokens | Est. Cost (USD) |
+|-----------|--------------|---------------|-----------------|
+| Log Analysis (10K lines) | ~15K | ~2K | $0.08 |
+| Screenshot + Log Diagnosis | ~25K (multimodal) | ~3K | $0.15 |
+| Fix Generation (single strategy) | ~8K | ~4K | $0.06 |
+| Fix Ranking (3 strategies) | ~20K | ~1K | $0.05 |
+| **Full Pipeline (avg. failure)** | **~50K** | **~10K** | **~$0.35** |
+| Complex Multi-File Bug | ~100K | ~20K | ~$0.75 |
 
-Monthly Cost Estimate (assuming 10 failures/day):
-
+**Monthly Cost Estimate** (assuming 10 failures/day):
+```
 10 failures/day × $0.35/failure × 30 days = $105/month
+```
 
-Cost Optimization Tips
+### Cost Optimization Tips
 
+1. **Enable Dry-Run Mode** during initial setup (no token cost for PR operations)
+2. **Set `GEMINIGUARD_CONFIDENCE_THRESHOLD=0.90`** to avoid low-confidence (wasteful) analyses
+3. **Use `GEMINIGUARD_MAX_COST_USD=50`** to auto-stop if daily costs spike
+4. **Cache logs** to avoid re-analyzing identical failures
+5. **Fine-tune prompts** to reduce output token count
 
-Enable Dry-Run Mode during initial setup (no token cost for PR operations)
-Set GEMINIGUARD_CONFIDENCE_THRESHOLD=0.90 to avoid low-confidence (wasteful) analyses
-Use GEMINIGUARD_MAX_COST_USD=50 to auto-stop if daily costs spike
-Cache logs to avoid re-analyzing identical failures
-Fine-tune prompts to reduce output token count
+View detailed costs in the dashboard under **Cost Analytics** tab.
 
+---
 
-View detailed costs in the dashboard under Cost Analytics tab.
+## Integrations
 
+### Supported Platforms
 
-Integrations
+| Platform | Status | Setup Time | Notes |
+|----------|--------|-----------|-------|
+| **GitHub Actions** | ✅ Ready | 5 min | Use provided workflow template |
+| **GitLab CI** | ✅ Ready | 5 min | Add .gitlab-ci.yml snippet |
+| **Slack** | ✅ Ready | 2 min | Add webhook URL to .env |
+| **Jira** | ✅ Ready | 3 min | Add credentials to .env |
+| **Azure DevOps** | 🔄 In Progress | Q3 2026 | See Roadmap |
+| **CircleCI** | 🔄 In Progress | Q3 2026 | See Roadmap |
+| **PagerDuty** | 📋 Planned | Q4 2026 | Incident escalation |
 
-Supported Platforms
+### Setup Examples
 
-PlatformStatusSetup TimeNotesGitHub Actions✅ Ready5 minUse provided workflow templateGitLab CI✅ Ready5 minAdd .gitlab-ci.yml snippetSlack✅ Ready2 minAdd webhook URL to .envJira✅ Ready3 minAdd credentials to .envAzure DevOps🔄 In ProgressQ3 2026See RoadmapCircleCI🔄 In ProgressQ3 2026See RoadmapPagerDuty📋 PlannedQ4 2026Incident escalation
-
-Setup Examples
-
-Slack Notification
+#### Slack Notification
 
 GeminiGuard automatically sends detailed Slack messages when:
+- A fix is generated (with confidence score and risk assessment)
+- A PR is opened (with link to dashboard)
+- A regression is prevented (from memory DB)
+- Cost thresholds are exceeded
 
-
-A fix is generated (with confidence score and risk assessment)
-A PR is opened (with link to dashboard)
-A regression is prevented (from memory DB)
-Cost thresholds are exceeded
-
-
+```
 ✅ GeminiGuard Self-Healing Summary
 
 🔍 Root Cause: Database connection timeout (port 5432 unreachable)
@@ -392,118 +413,103 @@ Cost thresholds are exceeded
 ⚡ Fix Generated: Increase connection timeout from 5s → 30s
 💰 Cost: $0.12
 🔗 PR: #1245 | Dashboard: [link]
+```
 
-Jira Ticket Auto-Creation
+#### Jira Ticket Auto-Creation
 
 When a fix is generated, GeminiGuard creates a Jira ticket with:
+- Automatic title: `[GeminiGuard] Fix: {root_cause}`
+- Description with: logs, root cause analysis, proposed fix, confidence score
+- Labels: `geminiguard`, `auto-generated`
+- Links to the PR and dashboard
 
+---
 
-Automatic title: [GeminiGuard] Fix: {root_cause}
-Description with: logs, root cause analysis, proposed fix, confidence score
-Labels: geminiguard, auto-generated
-Links to the PR and dashboard
-
-
-
-Dashboard
+## Dashboard
 
 Launch the real-time Streamlit dashboard:
 
-bashstreamlit run dashboard/app.py
+```bash
+streamlit run dashboard/app.py
+```
 
-Dashboard Features
+### Dashboard Features
 
-🏠 Home
+**🏠 Home**
+- Quick stats: Total failures detected, success rate, avg. fix time
+- Recent activity feed
+- Quick access to recent failures
 
+**📊 Pipeline Health**
+- Failure trends over time (hourly, daily, weekly)
+- Failure rate by service/component
+- Top failure categories
+- MTTR (Mean Time To Recovery) metrics
 
-Quick stats: Total failures detected, success rate, avg. fix time
-Recent activity feed
-Quick access to recent failures
+**💰 Cost Analytics**
+- Real-time cost tracking
+- Cost per failure
+- Cost by operation type
+- Daily/monthly budgets and alerts
 
+**🧠 Memory Browser**
+- Search past failures and their fixes
+- View similarity scores (e.g., "This failure is 87% similar to #342 on 2026-06-15")
+- One-click "Apply Previous Fix" for recurring issues
 
-📊 Pipeline Health
+**📋 Decision Audit Trail**
+- Why was Fix A chosen over Fix B?
+- Confidence scores for each strategy
+- Risk assessment details
+- Token usage breakdown
 
+**🔧 Integration Status**
+- GitHub: Connected ✅ | Latest sync: 2 min ago
+- Slack: Connected ✅ | Last notification: 1 hour ago
+- Jira: Connected ❌ | Error: Invalid token
 
-Failure trends over time (hourly, daily, weekly)
-Failure rate by service/component
-Top failure categories
-MTTR (Mean Time To Recovery) metrics
+**⚙️ Settings**
+- API key management
+- Threshold adjustments
+- Integration toggles
+- Log level control
 
+---
 
-💰 Cost Analytics
+## Usage Examples
 
+### Example 1: Auto-Fix a Dependency Conflict
 
-Real-time cost tracking
-Cost per failure
-Cost by operation type
-Daily/monthly budgets and alerts
-
-
-🧠 Memory Browser
-
-
-Search past failures and their fixes
-View similarity scores (e.g., "This failure is 87% similar to #342 on 2026-06-15")
-One-click "Apply Previous Fix" for recurring issues
-
-
-📋 Decision Audit Trail
-
-
-Why was Fix A chosen over Fix B?
-Confidence scores for each strategy
-Risk assessment details
-Token usage breakdown
-
-
-🔧 Integration Status
-
-
-GitHub: Connected ✅ | Latest sync: 2 min ago
-Slack: Connected ✅ | Last notification: 1 hour ago
-Jira: Connected ❌ | Error: Invalid token
-
-
-⚙️ Settings
-
-
-API key management
-Threshold adjustments
-Integration toggles
-Log level control
-
-
-
-Usage Examples
-
-Example 1: Auto-Fix a Dependency Conflict
-
-Failure Log:
-
+**Failure Log:**
+```
 ERROR: incompatible dependency versions
 - requests==2.28.0 requires urllib3<2.0, got 2.1.0
+```
 
-GeminiGuard Output:
-
+**GeminiGuard Output:**
+```
 🔍 Root Cause: Transitive dependency conflict
 📊 Confidence: 96%
 ✅ Fix: Update requests to >=2.30.0 in requirements.txt
 💼 Strategy: Bump to compatible version
 ⏱️ Time Taken: 8 seconds
 💰 Cost: $0.08
+```
 
-PR Generated: fix/dependency-conflict-requests → main
+**PR Generated:** `fix/dependency-conflict-requests` → main
 
+---
 
-Example 2: Recover from Database Migration Failure
+### Example 2: Recover from Database Migration Failure
 
-Failure Log:
-
+**Failure Log:**
+```
 ERROR: Alembic migration failed
 FAILED: 001_add_users_table.py (Column 'email' cannot be NULL)
+```
 
-GeminiGuard Output:
-
+**GeminiGuard Output:**
+```
 🔍 Root Cause: Missing NOT NULL constraint in migration
 📊 Confidence: 91%
 ✅ Fix: Add constraint check in Alembic script
@@ -513,26 +519,26 @@ GeminiGuard Output:
    3. Rollback and recreate (Confidence: 72%)
 ⏱️ Time Taken: 12 seconds
 💰 Cost: $0.15
+```
 
-Actions Taken:
+**Actions Taken:**
+- Created fix branch
+- Opened PR with detailed explanation
+- Posted to Slack #deployments channel
+- Linked to similar past failure (2024-05-12)
 
+---
 
-Created fix branch
-Opened PR with detailed explanation
-Posted to Slack #deployments channel
-Linked to similar past failure (2024-05-12)
+### Example 3: Debugging a Flaky Test
 
-
-
-Example 3: Debugging a Flaky Test
-
-Failure Pattern:
-
+**Failure Pattern:**
+```
 Tests pass locally, fail in CI 40% of the time
 Error: Race condition in async test suite
+```
 
-GeminiGuard Analysis:
-
+**GeminiGuard Analysis:**
+```
 🔍 Root Cause: Missing await on async fixture
 📊 Confidence: 88%
 🧠 Memory Hit: 3 similar failures fixed before
@@ -540,40 +546,49 @@ GeminiGuard Analysis:
    - 2026-04-10: Identical issue
 ✅ Fix Applied: Add asyncio.gather() to test setup
 💼 Learning Stored: "Flaky async tests → missing await"
+```
 
+---
 
-Troubleshooting
+## Troubleshooting
 
-Common Issues
+### Common Issues
 
-1. "GEMINI_API_KEY not found"
+#### 1. "GEMINI_API_KEY not found"
 
+```
 ❌ Error: GEMINI_API_KEY environment variable not set
 
 ✅ Solution:
    a) Create .env file with: GEMINI_API_KEY=your_key
    b) Or export: export GEMINI_API_KEY=your_key
    c) Or set in GitHub Secrets
+```
 
-2. "GitHub token insufficient permissions"
+#### 2. "GitHub token insufficient permissions"
 
+```
 ❌ Error: Token lacks 'workflow' or 'pull-requests' scopes
 
 ✅ Solution:
    a) Go to GitHub Settings → Developer settings → Personal access tokens
    b) Edit token → Enable 'repo' and 'workflow' scopes
    c) Regenerate and update .env
+```
 
-3. "Dry-run mode: PR not created"
+#### 3. "Dry-run mode: PR not created"
 
 This is expected! Dry-run mode validates the fix without actually creating PRs.
 
-bash# To enable live PR creation:
+```bash
+# To enable live PR creation:
 # In .env: GEMINIGUARD_DRY_RUN=false
 # Or: python -m geminiguard analyze --log-file log.txt --dry-run=false
+```
 
-4. "Cost exceeded maximum budget"
+#### 4. "Cost exceeded maximum budget"
 
+```
 ⚠️ Warning: Operation cost $1.20 exceeds max $1.00
 
 ✅ Solutions:
@@ -581,10 +596,12 @@ bash# To enable live PR creation:
    b) Lower log file size (truncate old logs)
    c) Reduce screenshot resolution
    d) Increase GEMINIGUARD_CONFIDENCE_THRESHOLD to skip low-confidence fixes
+```
 
-5. "Memory database connection failed"
+#### 5. "Memory database connection failed"
 
-bash# If using local ChromaDB:
+```bash
+# If using local ChromaDB:
 # 1. Ensure persistent storage directory exists:
 mkdir -p ./geminiguard_memory
 
@@ -593,118 +610,101 @@ chmod 755 ./geminiguard_memory
 
 # 3. Restart GeminiGuard
 python -m geminiguard daemon
+```
 
-Enable Debug Logging
+### Enable Debug Logging
 
-bash# In .env:
+```bash
+# In .env:
 GEMINIGUARD_LOG_LEVEL=DEBUG
 
 # Or:
 python -m geminiguard analyze --log-file fail.log --debug
+```
 
+---
 
-FAQ
+## FAQ
 
-Q: Will GeminiGuard push directly to main?
+### Q: Will GeminiGuard push directly to main?
 
-A: No. By design, GeminiGuard:
+**A:** No. By design, GeminiGuard:
+- Creates fix branches (never main)
+- Opens PRs for human review
+- Requires branch protection rules (recommended)
+- Can be configured to require approval before merge
 
+### Q: What if a fix causes a new failure?
 
-Creates fix branches (never main)
-Opens PRs for human review
-Requires branch protection rules (recommended)
-Can be configured to require approval before merge
+**A:** GeminiGuard detects this and:
+- Automatically reverts the PR
+- Tries the next-ranked fix strategy
+- Logs the learning: "This fix made things worse"
+- Stores in memory to avoid future attempts
 
+### Q: How much will this cost my CI/CD?
 
-Q: What if a fix causes a new failure?
-
-A: GeminiGuard detects this and:
-
-
-Automatically reverts the PR
-Tries the next-ranked fix strategy
-Logs the learning: "This fix made things worse"
-Stores in memory to avoid future attempts
-
-
-Q: How much will this cost my CI/CD?
-
-A: Depends on failure frequency:
-
-
-1 failure/day = ~$10.50/month
-10 failures/day = ~$105/month
-100 failures/day = ~$1,050/month (consider why so many failures!)
-
+**A:** Depends on failure frequency:
+- 1 failure/day = ~$10.50/month
+- 10 failures/day = ~$105/month
+- 100 failures/day = ~$1,050/month (consider why so many failures!)
 
 All operations are logged with costs visible in the dashboard.
 
-Q: Can I integrate with my custom CI/CD system?
+### Q: Can I integrate with my custom CI/CD system?
 
-A: Yes! GeminiGuard supports:
-
-
-GitHub Actions (native)
-GitLab CI (native)
-Any CI that can run Python (generic API mode)
-
+**A:** Yes! GeminiGuard supports:
+- GitHub Actions (native)
+- GitLab CI (native)
+- Any CI that can run Python (generic API mode)
 
 For custom systems, use:
-
-bashpython -m geminiguard analyze \
+```bash
+python -m geminiguard analyze \
   --log-file /var/log/ci/latest.log \
   --screenshot /tmp/error.png \
   --metadata ci_provider=custom
+```
 
-Q: How does the "memory" system work?
+### Q: How does the "memory" system work?
 
-A: GeminiGuard uses a vector database to store:
-
-
-Every failure (logs, screenshots, metadata)
-Every fix applied
-Success/failure outcome
-
+**A:** GeminiGuard uses a vector database to store:
+- Every failure (logs, screenshots, metadata)
+- Every fix applied
+- Success/failure outcome
 
 When new failures occur, it searches for similar past failures (~87% match = "similar") and suggests the previously-successful fix.
 
-Q: Is GeminiGuard GDPR/SOC2 compliant?
+### Q: Is GeminiGuard GDPR/SOC2 compliant?
 
-A: It depends on your deployment:
-
-
-Using Google Gemini API: Logs are sent to Google. Ensure your logging policy permits this.
-Self-hosted memory DB: Data stays on your infrastructure.
-
+**A:** It depends on your deployment:
+- **Using Google Gemini API**: Logs are sent to Google. Ensure your logging policy permits this.
+- **Self-hosted memory DB**: Data stays on your infrastructure.
 
 For enterprise deployments, consider:
+- On-premise vector DB (Weaviate, Milvus)
+- Private Gemini API endpoints (if available)
 
+### Q: Can I use this in production?
 
-On-premise vector DB (Weaviate, Milvus)
-Private Gemini API endpoints (if available)
+**A:** Yes, with proper safeguards:
+1. ✅ Start with `GEMINIGUARD_DRY_RUN=true`
+2. ✅ Test with low-traffic branches first
+3. ✅ Enable Slack/Jira notifications
+4. ✅ Set `require_approval: true` in PR settings
+5. ✅ Monitor the dashboard for first week
+6. ✅ Gradually increase `confidence_threshold` as you gain trust
 
+---
 
-Q: Can I use this in production?
-
-A: Yes, with proper safeguards:
-
-
-✅ Start with GEMINIGUARD_DRY_RUN=true
-✅ Test with low-traffic branches first
-✅ Enable Slack/Jira notifications
-✅ Set require_approval: true in PR settings
-✅ Monitor the dashboard for first week
-✅ Gradually increase confidence_threshold as you gain trust
-
-
-
-Contributing
+## Contributing
 
 We love contributions! Whether it's bug fixes, new features, or documentation improvements.
 
-Getting Started
+### Getting Started
 
-bash# Fork the repo and clone
+```bash
+# Fork the repo and clone
 git clone https://github.com/YOUR_USERNAME/GeminiGuard-Autonomous-Self-Healing-CI-CD-Agent.git
 cd GeminiGuard-Autonomous-Self-Healing-CI-CD-Agent
 
@@ -726,19 +726,19 @@ git commit -m "feat(analyzer): add support for custom log formats"
 
 # Push and create a PR
 git push origin feature/amazing-feature
+```
 
-Code Style
+### Code Style
 
+- Follow [Black](https://black.readthedocs.io/) for Python formatting
+- Use [type hints](https://docs.python.org/3/library/typing.html) for all functions
+- Write docstrings in [Google style](https://google.github.io/styleguide/pyguide.html#38-comments-and-docstrings)
+- Maintain >85% test coverage
 
-Follow Black for Python formatting
-Use type hints for all functions
-Write docstrings in Google style
-Maintain >85% test coverage
+### Testing
 
-
-Testing
-
-bash# Run all tests
+```bash
+# Run all tests
 pytest tests/
 
 # Run specific test file
@@ -746,32 +746,34 @@ pytest tests/test_analyzer.py -v
 
 # Run with coverage
 pytest tests/ --cov=geminiguard --cov-report=html
+```
 
+---
 
-Roadmap
+## Roadmap
 
+- [x] Multi-modal analysis (logs + screenshots + Docker state)
+- [x] Autonomous PR generation
+- [x] Slack & Jira integration
+- [x] Cost transparency dashboard
+- [x] Self-learning memory system
+- [ ] **Azure DevOps support** (Q3 2026)
+- [ ] **CircleCI & TravisCI integration** (Q3 2026)
+- [ ] **Custom fix strategy plugins** (Q4 2026)
+- [ ] **Team-wide knowledge base sharing** (Q4 2026)
+- [ ] **Enterprise SSO & RBAC** (Q1 2027)
+- [ ] **Kubernetes cluster health analysis** (Q1 2027)
+- [ ] **Performance regression detection** (Q2 2027)
 
- Multi-modal analysis (logs + screenshots + Docker state)
- Autonomous PR generation
- Slack & Jira integration
- Cost transparency dashboard
- Self-learning memory system
- Azure DevOps support (Q3 2026)
- CircleCI & TravisCI integration (Q3 2026)
- Custom fix strategy plugins (Q4 2026)
- Team-wide knowledge base sharing (Q4 2026)
- Enterprise SSO & RBAC (Q1 2027)
- Kubernetes cluster health analysis (Q1 2027)
- Performance regression detection (Q2 2027)
+---
 
+## License
 
+Distributed under the **MIT License**. See [LICENSE](LICENSE) file for details.
 
-License
+---
 
-Distributed under the MIT License. See LICENSE file for details.
-
-
-Star History
+## Star History
 
 <a href="https://www.star-history.com/?repos=iampraveen6%2FGeminiGuard-Autonomous-Self-Healing-CI-CD-Agent&type=timeline&legend=top-left">
   <picture>
@@ -781,29 +783,30 @@ Star History
   </picture>
 </a>
 
-Built With ❤️
+---
 
+## Built With ❤️
 
-Google Gemini 2.5 Pro - Multi-modal AI analysis
-ChromaDB - Self-learning memory system
-Streamlit - Real-time dashboard
-PyGithub - GitHub integration
-Python-Gitlab - GitLab integration
+- [Google Gemini 2.5 Pro](https://ai.google.dev/) - Multi-modal AI analysis
+- [ChromaDB](https://www.trychroma.com/) - Self-learning memory system
+- [Streamlit](https://streamlit.io/) - Real-time dashboard
+- [PyGithub](https://pygithub.readthedocs.io/) - GitHub integration
+- [Python-Gitlab](https://python-gitlab.readthedocs.io/) - GitLab integration
 
+---
 
+## Connect With Us
 
-Connect With Us
+- 🐙 **GitHub**: [iampraveen6](https://github.com/iampraveen6)
+- 💼 **LinkedIn**: [linkedin.com/in/iampraveen6](https://linkedin.com/in/iampraveen6)
+- 🐦 **Twitter**: [@iampraveen6](https://twitter.com/iampraveen6)
 
-
-🐙 GitHub: iampraveen6
-💼 LinkedIn: linkedin.com/in/iampraveen6
-🐦 Twitter: @iampraveen6
-
-
+---
 
 <div align="center">
-⭐ If you found GeminiGuard helpful, please star the repo!
 
-Questions? Open an issue or start a discussion.
+**⭐ If you found GeminiGuard helpful, please star the repo!**
+
+Questions? Open an [issue](https://github.com/iampraveen6/GeminiGuard-Autonomous-Self-Healing-CI-CD-Agent/issues) or start a [discussion](https://github.com/iampraveen6/GeminiGuard-Autonomous-Self-Healing-CI-CD-Agent/discussions).
 
 </div>
