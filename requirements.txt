@@ -1,0 +1,5 @@
+google-generativeai
+streamlit
+pytest
+python-dotenv
+PyGithub>=1.55

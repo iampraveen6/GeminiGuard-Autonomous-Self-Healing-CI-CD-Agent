@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+
+# Virtual env
+venv/
+.venv/
+
+# Env files
+.env
+
+# Cache
+.pytest_cache/
+
+# Memory database (optional)
+memory_db.json
+
+# OS
+.DS_Store
+
+
