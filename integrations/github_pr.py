@@ -21,8 +21,7 @@ def create_fix_pr(fix_description):
         return "⚠️ Missing GitHub configuration"
 
     try:
-        # ✅ Handle SSL issue (dev environments)
-        g = Github(GITHUB_TOKEN, verify=False)
+        g = Github(GITHUB_TOKEN)
 
         repo = g.get_repo(REPO_NAME)
 

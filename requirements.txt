@@ -3,3 +3,4 @@ streamlit
 pytest
 python-dotenv
 PyGithub>=1.55
+requests>=2.31.0
