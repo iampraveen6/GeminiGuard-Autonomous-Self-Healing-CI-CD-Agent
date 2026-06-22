@@ -433,6 +433,30 @@ Launch the real-time Streamlit dashboard:
 streamlit run dashboard/app.py
 ```
 
+### Detailed Setup and Run
+
+```bash
+source venv/bin/activate
+port PYTHONPATH=$(pwd)
+export TEST_MODE=false
+
+python3 -m pip install -r requirements.txt \
+  --no-cache-dir \
+  --trusted-host pypi.org \
+  --trusted-host files.pythonhosted.org \
+  --trusted-host pypi.python.org
+
+python3 -m pip install requests \
+  --no-cache-dir \
+  --trusted-host pypi.org \
+  --trusted-host files.pythonhosted.org \
+  --trusted-host pypi.python.org
+
+sudo kill -9 $(sudo lsof -t -i:8501) 2>/dev/null || true
+
+python3 -m streamlit run dashboard/app.py --server.port 8501
+```
+
 ### Dashboard Features
 
 **🏠 Home**
