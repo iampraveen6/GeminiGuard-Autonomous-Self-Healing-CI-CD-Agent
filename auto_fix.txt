@@ -1,0 +1,6 @@
+AI Fix Applied:
+
+Evaluate the purpose of `test_intentional_failure`. If it's solely for triggering or validating the self-healing mechanism, consider configuring the CI/CD pipeline to: 
+1.  Allow the build to proceed to the self-healing stage despite this specific test's failure, treating it as an expected trigger rather than a blocking error.
+2.  Isolate this test to run only in specific environments or on-demand (e.g., dedicated branches for self-healing agent development/testing) rather than in every standard CI/CD run.
+3.  If the self-healing agent's trigger mechanism is sufficiently validated, consider disabling or removing this test from regular CI/CD runs to avoid perpetual pipeline failures.
