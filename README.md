@@ -20,6 +20,13 @@
 
 **Detects failures. Diagnoses root causes. Generates fixes. Opens PRs. Learns from every mistake.**
 
+| Project Snapshot | |
+|---|---|
+| **What it is** | An AI-powered autonomous agent that diagnoses CI/CD failures from logs, screenshots, and Docker state and opens fix PRs. |
+| **Why it matters** | Demonstrates AI for SRE, self-healing CI/CD, cost-aware automation, and failure-memory systems. |
+| **Tech stack** | Python, Google Gemini 2.5 Pro, ChromaDB, Streamlit, PyGithub, GitHub Actions. |
+| **Key outcomes** | Autonomous PR generation, confidence-ranked fixes, real-time cost transparency, and self-learning memory. |
+
 ## 📋 Table of Contents
 
 - [Why GeminiGuard?](#why-geminiguard)
@@ -729,7 +736,7 @@ We love contributions! Whether it's bug fixes, new features, or documentation im
 
 ```bash
 # Fork the repo and clone
-git clone https://github.com/YOUR_USERNAME/GeminiGuard-Autonomous-Self-Healing-CI-CD-Agent.git
+git clone https://github.com/iampraveen6/GeminiGuard-Autonomous-Self-Healing-CI-CD-Agent.git
 cd GeminiGuard-Autonomous-Self-Healing-CI-CD-Agent
 
 # Create a feature branch
