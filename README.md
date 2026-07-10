@@ -27,6 +27,8 @@
 | **Tech stack** | Python, Google Gemini 2.5 Pro, ChromaDB, Streamlit, PyGithub, GitHub Actions. |
 | **Key outcomes** | Autonomous PR generation, confidence-ranked fixes, real-time cost transparency, and self-learning memory. |
 
+[![CI](https://github.com/iampraveen6/GeminiGuard-Autonomous-Self-Healing-CI-CD-Agent/actions/workflows/ci.yml/badge.svg)](https://github.com/iampraveen6/GeminiGuard-Autonomous-Self-Healing-CI-CD-Agent/actions/workflows/ci.yml)
+
 ## 📋 Table of Contents
 
 - [Why GeminiGuard?](#why-geminiguard)
@@ -156,6 +158,10 @@ graph TD
 ```
 
 ---
+
+## 📸 Screenshots
+
+> Coming soon — screenshots of the Streamlit dashboard and example PR output will be added here.
 
 ## Prerequisites
 
@@ -727,6 +733,10 @@ For enterprise deployments, consider:
 6. ✅ Gradually increase `confidence_threshold` as you gain trust
 
 ---
+
+## Deployment
+
+GeminiGuard can run as a background daemon, integrate with GitHub Actions, or be used through the Streamlit dashboard. See the Quick Start and Configuration sections for details.
 
 ## Contributing
 
