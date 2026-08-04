@@ -1,8 +1,12 @@
 import sys
 import os
+from dotenv import load_dotenv
 
-# ✅ Fix imports
+# Load environment variables from .env file
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+load_dotenv(os.path.join(BASE_DIR, '.env'))
+
+# Fix imports
 sys.path.append(BASE_DIR)
 
 import streamlit as st
