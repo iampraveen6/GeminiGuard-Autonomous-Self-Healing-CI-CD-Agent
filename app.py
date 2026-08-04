@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
 import sys
 import os
-from dotenv import load_dotenv
-
-# Load environment variables from .env file
-load_dotenv()
 
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import streamlit as st
 from datetime import datetime
+
+# Debug: Show environment variables (remove in production)
+if os.getenv('DEBUG_ENV') == 'true':
+    st.write("Environment Variables:")
+    st.write(f"GEMINI_API_KEY: {'SET' if os.getenv('GEMINI_API_KEY') else 'NOT SET'}")
+    st.write(f"TEST_MODE: {os.getenv('TEST_MODE')}")
 
 # Project imports
 from agents.analyzer import run_analysis
