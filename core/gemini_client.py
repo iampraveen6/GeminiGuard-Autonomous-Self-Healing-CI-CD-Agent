@@ -46,18 +46,17 @@ def record_api_call():
     usage_tracker["requests_today"] += 1
 
 
-def handle_quota_error():
+def handle_quota_error(logs=None):
     """Handle quota exceeded error by switching to test mode"""
     os.environ["TEST_MODE"] = "true"
-    mock_response = get_mock_response()
+    mock_response = get_mock_response(logs)
     
     return {
         "error": "QUOTA_EXCEEDED",
         "message": "Daily API quota exceeded. Automatically switched to test mode.",
         "usage_info": f"Used {usage_tracker['requests_today']}/{FREE_TIER_DAILY_LIMIT} requests",
         "retry_after": "Daily quota resets at midnight UTC",
-        "mock_fallback": True,
-        "mock_data": mock_response  # Return actual mock data
+        "mock_data": mock_response
     }
 
 
@@ -71,22 +70,85 @@ def get_api_key():
 # -------------------------
 # ✅ TEST MODE (Mock Response)
 # -------------------------
-def get_mock_response():
-    return {
-        "root_cause": "Missing Python dependency 'requests'",
-        "fixes": [
-            {
-                "description": "Install missing dependency using pip install requests",
-                "confidence": 0.9,
-                "risk": "low"
-            },
-            {
-                "description": "Verify virtual environment activation",
-                "confidence": 0.7,
-                "risk": "medium"
-            }
-        ]
-    }
+def get_mock_response(logs=None):
+    """
+    Generate context-aware mock response based on log content
+    """
+    logs_lower = logs.lower() if logs else ""
+    
+    # Infrastructure-related mock responses
+    if any(kw in logs_lower for kw in ['pod', 'kubernetes', 'container', 'pending', 'unready', 'k8s', 'docker']):
+        return {
+            "root_cause": "Kubernetes infrastructure issue - pod stuck in Pending state with unready containers",
+            "fixes": [
+                {
+                    "description": "Check Kubernetes cluster health and node availability",
+                    "confidence": 0.95,
+                    "risk": "low"
+                },
+                {
+                    "description": "Verify container image availability and pull policies",
+                    "confidence": 0.9,
+                    "risk": "medium"
+                },
+                {
+                    "description": "Review resource quotas and limits for the namespace",
+                    "confidence": 0.85,
+                    "risk": "low"
+                },
+                {
+                    "description": "Check network policies and DNS configuration",
+                    "confidence": 0.8,
+                    "risk": "medium"
+                }
+            ]
+        }
+    
+    # External service-related mock responses
+    elif any(kw in logs_lower for kw in ['artifactory', 'jfrog', 'nexus', 'gitlab', 'github', 'database', 'api gateway']):
+        return {
+            "root_cause": "External service connectivity or availability issue",
+            "fixes": [
+                {
+                    "description": "Verify external service status and availability",
+                    "confidence": 0.9,
+                    "risk": "low"
+                },
+                {
+                    "description": "Check network connectivity and firewall rules",
+                    "confidence": 0.85,
+                    "risk": "medium"
+                },
+                {
+                    "description": "Review service authentication and credentials",
+                    "confidence": 0.8,
+                    "risk": "low"
+                }
+            ]
+        }
+    
+    # Default generic mock response
+    else:
+        return {
+            "root_cause": "CI/CD pipeline failure - review logs for specific error details",
+            "fixes": [
+                {
+                    "description": "Review pipeline logs for specific error messages and stack traces",
+                    "confidence": 0.7,
+                    "risk": "low"
+                },
+                {
+                    "description": "Check recent changes in configuration files and dependencies",
+                    "confidence": 0.6,
+                    "risk": "medium"
+                },
+                {
+                    "description": "Verify environment variables and secrets configuration",
+                    "confidence": 0.8,
+                    "risk": "low"
+                }
+            ]
+        }
 
 
 # -------------------------
@@ -115,7 +177,7 @@ def get_available_model(api_key):
 def analyze_failure(logs: str):
     # TEST MODE → Skip API entirely
     if os.getenv("TEST_MODE") == "true":
-        return get_mock_response()
+        return get_mock_response(logs)
 
     api_key = get_api_key()
 
@@ -125,7 +187,7 @@ def analyze_failure(logs: str):
     # Check rate limit before making API call
     can_proceed, limit_message, remaining = check_rate_limit()
     if not can_proceed:
-        mock_response = get_mock_response()
+        mock_response = get_mock_response(logs)
         return {
             "error": "RATE_LIMIT_APPROACHED",
             "message": limit_message,
@@ -177,7 +239,7 @@ def analyze_failure(logs: str):
 
         # Handle quota exceeded error
         if response.status_code == 429:
-            return handle_quota_error()
+            return handle_quota_error(logs)
 
         if response.status_code != 200:
             return {"error": response.text}
