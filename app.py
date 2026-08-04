@@ -129,13 +129,18 @@ if result:
             st.success("Fix Applied Successfully")
 
             with st.spinner("Creating GitHub PR..."):
-                pr_result = create_fix_pr(selected["description"], branch_type)
+                pr_result = create_fix_pr(selected["description"], logs, branch_type)
 
                 if "http" in pr_result:
                     st.success("PR Created Successfully!")
                     st.markdown(f"[View Pull Request]({pr_result})")
+                    
+                    # Show validation results
+                    if "Validation:" in pr_result:
+                        validation_part = pr_result.split("Validation:")[1].strip()
+                        st.info(f"Validation: {validation_part}")
                 else:
-                    st.info(pr_result)
+                    st.warning(pr_result)
 
         else:
             st.error("Fix validation failed")
