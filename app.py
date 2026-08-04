@@ -8,6 +8,25 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import streamlit as st
 from datetime import datetime
 
+# Professional system status in collapsible section
+if os.getenv('DEBUG_ENV') == 'true':
+    with st.expander("🔧 System Status (Debug)", expanded=False):
+        st.caption("Environment Configuration")
+        
+        col1, col2 = st.columns(2)
+        with col1:
+            api_key_status = "✅ Connected" if os.getenv('GEMINI_API_KEY') else "❌ Not Configured"
+            st.metric("Gemini API", api_key_status)
+        with col2:
+            test_mode = os.getenv('TEST_MODE', 'false')
+            mode_status = "🧪 Test Mode" if test_mode == 'true' else "🚀 Production"
+            st.metric("Operation Mode", mode_status)
+        
+        st.divider()
+        st.caption("System Information")
+        st.write(f"Python Version: {sys.version.split()[0]}")
+        st.write(f"Working Directory: {os.getcwd()}")
+
 # Project imports
 from agents.analyzer import run_analysis
 from core.fix_ranker import rank_fixes
