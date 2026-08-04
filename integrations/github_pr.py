@@ -173,9 +173,8 @@ def create_fix_pr(fix_description, logs=None, branch_type="feature"):
         branch_type: Type of branch - "feature" or "hotfix" (default: "feature")
     """
 
-    # TEST MODE → Skip PR
-    if os.getenv("TEST_MODE") == "true":
-        return "PR skipped (TEST MODE)"
+    # Note: PR creation uses GitHub API, not Gemini API, so TEST_MODE doesn't block it
+    # TEST_MODE only affects Gemini API calls in gemini_client.py
 
     GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
     REPO_NAME = os.getenv("REPO_NAME") or os.getenv("GITHUB_REPO")
