@@ -1,0 +1,3 @@
+AI Fix Applied:
+
+If direct pushes to the 'Prod' branch are a valid workflow for this project, modify the CI/CD pipeline (e.g., `.gitlab-ci.yml`) to make the `validate-mr-approval` step conditional. For instance, skip this step if the job is not triggered by a Merge Request (e.g., using `rules:if: $CI_MERGE_REQUEST_ID`).
