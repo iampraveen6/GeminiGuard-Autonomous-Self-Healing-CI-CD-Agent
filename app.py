@@ -104,18 +104,18 @@ if result:
         if error_type == "RATE_LIMIT_APPROACHED":
             st.warning("Rate Limit Approaching")
             st.info(result.get("message", "Please try again later"))
-            if result.get("mock_fallback"):
+            if result.get("mock_data"):
                 st.info("Using test mode responses until quota resets")
-                # Use the mock fallback
-                result = result.get("mock_fallback")
+                # Use the mock data
+                result = result.get("mock_data")
         elif error_type == "QUOTA_EXCEEDED":
             st.error("API Quota Exceeded")
             st.warning(result.get("message", "Daily limit reached"))
             st.info(f"Usage: {result.get('usage_info', 'Unknown')}")
             st.info(f"Retry after: {result.get('retry_after', '24 hours')}")
-            if result.get("mock_fallback"):
+            if result.get("mock_data"):
                 st.info("Using test mode responses")
-                result = result.get("mock_fallback")
+                result = result.get("mock_data")
         else:
             st.error(f"Analysis failed: {error_type}")
             st.stop()

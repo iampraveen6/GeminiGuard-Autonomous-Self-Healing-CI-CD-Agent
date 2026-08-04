@@ -49,12 +49,15 @@ def record_api_call():
 def handle_quota_error():
     """Handle quota exceeded error by switching to test mode"""
     os.environ["TEST_MODE"] = "true"
+    mock_response = get_mock_response()
+    
     return {
         "error": "QUOTA_EXCEEDED",
         "message": "Daily API quota exceeded. Automatically switched to test mode.",
         "usage_info": f"Used {usage_tracker['requests_today']}/{FREE_TIER_DAILY_LIMIT} requests",
         "retry_after": "Daily quota resets at midnight UTC",
-        "mock_fallback": True
+        "mock_fallback": True,
+        "mock_data": mock_response  # Return actual mock data
     }
 
 
@@ -122,12 +125,13 @@ def analyze_failure(logs: str):
     # Check rate limit before making API call
     can_proceed, limit_message, remaining = check_rate_limit()
     if not can_proceed:
+        mock_response = get_mock_response()
         return {
             "error": "RATE_LIMIT_APPROACHED",
             "message": limit_message,
             "remaining_requests": remaining,
             "auto_test_mode": True,
-            "mock_fallback": get_mock_response()
+            "mock_data": mock_response  # Return actual mock data
         }
 
     try:
