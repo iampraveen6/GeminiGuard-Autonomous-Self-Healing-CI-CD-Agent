@@ -2,14 +2,14 @@ import sys
 from core.gemini_client import analyze_failure
 
 
-def run_analysis(logs):
+def run_analysis(logs, test_mode=True):
     try:
         print("Analyzing failure log...\n")
     except UnicodeEncodeError:
         # Fallback if console doesn't support emojis
         sys.stdout.write("Analyzing failure log...\n")
 
-    raw = analyze_failure(logs)
+    raw = analyze_failure(logs, test_mode)
 
     # Case 1: Already proper dict (expected)
     if isinstance(raw, dict):

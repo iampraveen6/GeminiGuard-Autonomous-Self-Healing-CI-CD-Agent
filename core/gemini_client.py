@@ -174,9 +174,20 @@ def get_available_model(api_key):
 # -------------------------
 # Main Function
 # -------------------------
-def analyze_failure(logs: str):
+def analyze_failure(logs: str, test_mode=None):
+    """
+    Analyze CI/CD failure logs
+    
+    Args:
+        logs: The CI/CD log text
+        test_mode: Override TEST_MODE setting (None = use environment variable)
+    """
+    # Use parameter if provided, otherwise check environment variable
+    if test_mode is None:
+        test_mode = os.getenv("TEST_MODE", "false").lower() == "true"
+    
     # TEST MODE → Skip API entirely
-    if os.getenv("TEST_MODE") == "true":
+    if test_mode:
         return get_mock_response(logs)
 
     api_key = get_api_key()
