@@ -159,6 +159,8 @@ def validate_fix_relevance(fix_description, logs):
         else:
             failed_check_names = [check['name'] for check in validation_report['checks'] if check['status'] == 'FAIL']
             validation_message = f"Fix may not be actionable (confidence: {confidence_score}%) - Failed: {', '.join(failed_check_names)}"
+    
+    return is_valid, validation_message, confidence_score, validation_report
 
 
 def create_fix_pr(fix_description, logs=None, branch_type="feature"):
