@@ -121,7 +121,7 @@ if result:
             st.stop()
     
     # If we got here, we have a valid result (either real or mock)
-    if result.get("auto_test_mode"):
+    if result and isinstance(result, dict) and result.get("auto_test_mode"):
         st.info("Running in test mode (rate limit protection)")
     
     st.success("Analysis Complete")
