@@ -187,8 +187,12 @@ def create_fix_pr(fix_description, logs=None, branch_type="feature"):
     is_valid, validation_message, confidence_score, validation_report = validate_fix_relevance(fix_description, logs or "")
     
     if not is_valid:
+        # Extract error type and guidance from validation report
+        error_type = validation_report.get('error_type', 'unknown')
+        guidance = validation_report.get('guidance', 'No guidance available')
+        
         # Build detailed failure message
-        detailed_failure = f"Validation failed: {validation_message}\n\n**Error Type:** {error_type.upper()}\n**Guidance:** {guidance_message}\n\n**Detailed Report:**\n"
+        detailed_failure = f"Validation failed: {validation_message}\n\n**Error Type:** {error_type.upper()}\n**Guidance:** {guidance}\n\n**Detailed Report:**\n"
         for check in validation_report['checks']:
             icon = "✅" if check['status'] == 'PASS' else "❌"
             detailed_failure += f"{icon} **{check['name']}** ({check['status']}): {check['details']}\n"
@@ -331,6 +335,7 @@ This PR contains documentation for the AI-suggested fix. Please:
         )
 
         # Build detailed success message
+        error_type = validation_report.get('error_type', 'unknown')
         detailed_success = f"PR Created: {pr.html_url}\n\n**Error Type:** {error_type.upper()}\n**Validation Summary:** {validation_message}\n\n**Detailed Report:**\n"
         for check in validation_report['checks']:
             icon = "✅" if check['status'] == 'PASS' else "❌"
