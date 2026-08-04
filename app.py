@@ -105,6 +105,13 @@ if result:
         format_func=lambda x: x["description"]
     )
 
+    # Branch type selection
+    branch_type = st.radio(
+        "Branch Type",
+        ["feature", "hotfix"],
+        help="Feature: For new functionality | Hotfix: For urgent bug fixes"
+    )
+
     # Apply + PR
     if st.button("Apply Fix & Create PR"):
         status = "success" if selected["confidence"] > 0.6 else "failed"
@@ -122,7 +129,7 @@ if result:
             st.success("Fix Applied Successfully")
 
             with st.spinner("Creating GitHub PR..."):
-                pr_result = create_fix_pr(selected["description"])
+                pr_result = create_fix_pr(selected["description"], branch_type)
 
                 if "http" in pr_result:
                     st.success("PR Created Successfully!")
