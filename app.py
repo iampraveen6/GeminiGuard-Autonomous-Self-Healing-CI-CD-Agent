@@ -138,6 +138,11 @@ if result:
                     pr_url = pr_result.split("\n\n")[0].split("PR Created: ")[1]
                     st.markdown(f"[View Pull Request]({pr_url})")
                     
+                    # Show error type if present
+                    if "Error Type:" in pr_result:
+                        error_type_line = [line for line in pr_result.split('\n') if "Error Type:" in line][0]
+                        st.info(error_type_line.strip())
+                    
                     # Show detailed validation results
                     if "Detailed Report:" in pr_result:
                         with st.expander("Validation Report", expanded=True):
@@ -153,7 +158,17 @@ if result:
                                     else:
                                         st.info(line.strip())
                 else:
-                    st.warning("PR Creation Failed")
+                    # Show error type and guidance prominently
+                    if "Error Type:" in pr_result:
+                        st.error("PR Creation Disabled")
+                        
+                        # Extract error type and guidance
+                        lines = pr_result.split('\n')
+                        for line in lines:
+                            if "Error Type:" in line:
+                                st.warning(line.strip())
+                            elif "Guidance:" in line:
+                                st.info(line.strip())
                     
                     # Show detailed validation report for failures
                     if "Detailed Report:" in pr_result:

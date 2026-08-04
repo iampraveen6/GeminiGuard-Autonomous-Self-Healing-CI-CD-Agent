@@ -3,6 +3,48 @@ from github import Github
 from datetime import datetime
 
 
+def categorize_error_type(logs, fix_description):
+    """
+    Categorize the type of error based on logs and fix description
+    
+    Returns:
+        tuple: (error_type, guidance_message)
+        error_type: 'application', 'infrastructure', 'external', 'unknown'
+    """
+    infrastructure_keywords = [
+        'pod', 'kubernetes', 'k8s', 'container', 'docker', 'pending', 
+        'unready', 'namespace', 'executor', 'runner', 'gitlab-runner',
+        'imagepull', 'crashloop', 'oomkilled', 'deadline', 'quota',
+        'infrastructure', 'network', 'dns', 'proxy', 'certificate'
+    ]
+    
+    external_service_keywords = [
+        'artifactory', 'jfrog', 'nexus', 'github', 'gitlab', 'bitbucket',
+        'sonarqube', 'jenkins', 'aws', 'azure', 'gcp', 'database',
+        'api gateway', 'service mesh', 'vault', 'ldap', 'sso'
+    ]
+    
+    logs_lower = logs.lower() if logs else ""
+    fix_lower = fix_description.lower()
+    
+    # Check for infrastructure issues
+    infrastructure_matches = sum(1 for kw in infrastructure_keywords if kw in logs_lower)
+    if infrastructure_matches >= 2:
+        return 'infrastructure', "Infrastructure/CI/CD issue detected. This requires DevOps intervention rather than code changes."
+    
+    # Check for external service issues
+    external_matches = sum(1 for kw in external_service_keywords if kw in logs_lower)
+    if external_matches >= 2:
+        return 'external', "External service issue detected. This may require service team coordination."
+    
+    # Check if fix suggests code changes
+    code_change_keywords = ['code', 'function', 'class', 'import', 'file', 'variable', 'method']
+    if any(kw in fix_lower for kw in code_change_keywords):
+        return 'application', "Application code issue detected. Can be fixed with code changes."
+    
+    return 'unknown', "Error type unclear. Manual review required."
+
+
 def validate_fix_relevance(fix_description, logs):
     """
     Validate if the fix is relevant to the logs and source code
@@ -14,12 +56,17 @@ def validate_fix_relevance(fix_description, logs):
     Returns:
         tuple: (is_valid, validation_message, confidence_score, detailed_report)
     """
+    # Categorize error type first
+    error_type, guidance_message = categorize_error_type(logs, fix_description)
+    
     # Detailed validation report
     validation_report = {
         'checks': [],
         'score_breakdown': {},
         'passed_checks': 0,
-        'failed_checks': 0
+        'failed_checks': 0,
+        'error_type': error_type,
+        'guidance': guidance_message
     }
     
     # Check 1: Technical keywords
@@ -100,17 +147,18 @@ def validate_fix_relevance(fix_description, logs):
     # Calculate total confidence score
     confidence_score = sum(validation_report['score_breakdown'].values())
     
-    # Validation decision
-    is_valid = confidence_score >= 50
-    
-    # Generate detailed message
-    if is_valid:
-        validation_message = f"Fix appears relevant (confidence: {confidence_score}%) - {validation_report['passed_checks']}/{len(validation_report['checks'])} checks passed"
+    # Validation decision - consider error type
+    if error_type in ['infrastructure', 'external']:
+        is_valid = False  # Don't create PRs for infrastructure/external issues
+        confidence_score = 0  # Override score for non-application errors
+        validation_message = f"{guidance_message} Error type: {error_type.upper()}. PR creation disabled for this error type."
     else:
-        failed_check_names = [check['name'] for check in validation_report['checks'] if check['status'] == 'FAIL']
-        validation_message = f"Fix may not be actionable (confidence: {confidence_score}%) - Failed: {', '.join(failed_check_names)}"
-    
-    return is_valid, validation_message, confidence_score, validation_report
+        is_valid = confidence_score >= 50
+        if is_valid:
+            validation_message = f"Fix appears relevant (confidence: {confidence_score}%) - {validation_report['passed_checks']}/{len(validation_report['checks'])} checks passed"
+        else:
+            failed_check_names = [check['name'] for check in validation_report['checks'] if check['status'] == 'FAIL']
+            validation_message = f"Fix may not be actionable (confidence: {confidence_score}%) - Failed: {', '.join(failed_check_names)}"
 
 
 def create_fix_pr(fix_description, logs=None, branch_type="feature"):
@@ -138,7 +186,7 @@ def create_fix_pr(fix_description, logs=None, branch_type="feature"):
     
     if not is_valid:
         # Build detailed failure message
-        detailed_failure = f"Validation failed: {validation_message}\n\n**Detailed Report:**\n"
+        detailed_failure = f"Validation failed: {validation_message}\n\n**Error Type:** {error_type.upper()}\n**Guidance:** {guidance_message}\n\n**Detailed Report:**\n"
         for check in validation_report['checks']:
             icon = "✅" if check['status'] == 'PASS' else "❌"
             detailed_failure += f"{icon} **{check['name']}** ({check['status']}): {check['details']}\n"
@@ -281,7 +329,7 @@ This PR contains documentation for the AI-suggested fix. Please:
         )
 
         # Build detailed success message
-        detailed_success = f"PR Created: {pr.html_url}\n\n**Validation Summary:** {validation_message}\n\n**Detailed Report:**\n"
+        detailed_success = f"PR Created: {pr.html_url}\n\n**Error Type:** {error_type.upper()}\n**Validation Summary:** {validation_message}\n\n**Detailed Report:**\n"
         for check in validation_report['checks']:
             icon = "✅" if check['status'] == 'PASS' else "❌"
             detailed_success += f"{icon} **{check['name']}** ({check['status']}): {check['details']}\n"
