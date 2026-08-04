@@ -26,6 +26,28 @@ if os.getenv('DEBUG_ENV') == 'true':
         st.caption("System Information")
         st.write(f"Python Version: {sys.version.split()[0]}")
         st.write(f"Working Directory: {os.getcwd()}")
+        
+        # Add quota status
+        try:
+            from core.gemini_client import usage_tracker, FREE_TIER_DAILY_LIMIT
+            remaining = FREE_TIER_DAILY_LIMIT - usage_tracker["requests_today"]
+            usage_percent = (usage_tracker["requests_today"] / FREE_TIER_DAILY_LIMIT) * 100
+            
+            st.divider()
+            st.caption("API Quota Status")
+            col3, col4 = st.columns(2)
+            with col3:
+                st.metric("Requests Today", usage_tracker["requests_today"])
+            with col4:
+                st.metric("Remaining", remaining)
+            
+            # Progress bar
+            st.progress(usage_percent / 100, text=f"Daily Usage: {usage_percent:.1f}%")
+            
+            if remaining <= 2:
+                st.warning("Approaching rate limit - will switch to test mode automatically")
+        except Exception as e:
+            st.caption(f"Quota status unavailable: {str(e)}")
 
 # Project imports
 from agents.analyzer import run_analysis
@@ -75,11 +97,33 @@ if st.button("Analyze"):
 result = st.session_state.analysis_result
 
 if result:
-    # Correct error handling
+    # Handle different error types
     if not result or ("error" in result and result["error"]):
-        st.error(result.get("error", "Analysis failed"))
-        st.stop()
-
+        error_type = result.get("error", "Unknown error")
+        
+        if error_type == "RATE_LIMIT_APPROACHED":
+            st.warning("Rate Limit Approaching")
+            st.info(result.get("message", "Please try again later"))
+            if result.get("mock_fallback"):
+                st.info("Using test mode responses until quota resets")
+                # Use the mock fallback
+                result = result.get("mock_fallback")
+        elif error_type == "QUOTA_EXCEEDED":
+            st.error("API Quota Exceeded")
+            st.warning(result.get("message", "Daily limit reached"))
+            st.info(f"Usage: {result.get('usage_info', 'Unknown')}")
+            st.info(f"Retry after: {result.get('retry_after', '24 hours')}")
+            if result.get("mock_fallback"):
+                st.info("Using test mode responses")
+                result = result.get("mock_fallback")
+        else:
+            st.error(f"Analysis failed: {error_type}")
+            st.stop()
+    
+    # If we got here, we have a valid result (either real or mock)
+    if result.get("auto_test_mode"):
+        st.info("Running in test mode (rate limit protection)")
+    
     st.success("Analysis Complete")
 
     st.subheader("Root Cause")

@@ -1,12 +1,65 @@
 import os
 import requests
 import json
+import time
+from datetime import datetime, timedelta
 
 BASE_URL = "https://generativelanguage.googleapis.com/v1beta"
 
+# -------------------------
+# Rate Limiting Configuration
+# -------------------------
+FREE_TIER_DAILY_LIMIT = 20  # Free tier limit
+RATE_LIMIT_BUFFER = 2  # Keep buffer before hitting limit
+usage_tracker = {
+    "requests_today": 0,
+    "reset_time": datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) + timedelta(days=1)
+}
+
+
+def check_rate_limit():
+    """
+    Check if we're approaching the rate limit
+    Returns: (can_proceed, message, remaining_requests)
+    """
+    global usage_tracker
+    
+    # Reset counter if new day
+    now = datetime.now()
+    if now >= usage_tracker["reset_time"]:
+        usage_tracker["requests_today"] = 0
+        usage_tracker["reset_time"] = now.replace(hour=0, minute=0, second=0, microsecond=0) + timedelta(days=1)
+    
+    remaining = FREE_TIER_DAILY_LIMIT - usage_tracker["requests_today"]
+    
+    # Auto-switch to test mode if approaching limit
+    if remaining <= RATE_LIMIT_BUFFER:
+        os.environ["TEST_MODE"] = "true"  # Temporarily enable test mode
+        return False, f"Rate limit approaching ({remaining} requests remaining). Auto-switched to test mode.", remaining
+    
+    return True, f"{remaining} requests remaining today", remaining
+
+
+def record_api_call():
+    """Record an API call for rate limiting"""
+    global usage_tracker
+    usage_tracker["requests_today"] += 1
+
+
+def handle_quota_error():
+    """Handle quota exceeded error by switching to test mode"""
+    os.environ["TEST_MODE"] = "true"
+    return {
+        "error": "QUOTA_EXCEEDED",
+        "message": "Daily API quota exceeded. Automatically switched to test mode.",
+        "usage_info": f"Used {usage_tracker['requests_today']}/{FREE_TIER_DAILY_LIMIT} requests",
+        "retry_after": "Daily quota resets at midnight UTC",
+        "mock_fallback": True
+    }
+
 
 # -------------------------
-# ✅ Get API Key Dynamically
+# Get API Key Dynamically
 # -------------------------
 def get_api_key():
     return os.getenv("GEMINI_API_KEY")
@@ -54,10 +107,10 @@ def get_available_model(api_key):
 
 
 # -------------------------
-# ✅ Main Function
+# Main Function
 # -------------------------
 def analyze_failure(logs: str):
-    # ✅ TEST MODE → Skip API entirely
+    # TEST MODE → Skip API entirely
     if os.getenv("TEST_MODE") == "true":
         return get_mock_response()
 
@@ -66,10 +119,20 @@ def analyze_failure(logs: str):
     if not api_key:
         return {"error": "Missing GEMINI_API_KEY"}
 
+    # Check rate limit before making API call
+    can_proceed, limit_message, remaining = check_rate_limit()
+    if not can_proceed:
+        return {
+            "error": "RATE_LIMIT_APPROACHED",
+            "message": limit_message,
+            "remaining_requests": remaining,
+            "auto_test_mode": True,
+            "mock_fallback": get_mock_response()
+        }
+
     try:
         model_name = get_available_model(api_key)
-        print(f"✅ Using model: {model_name}")
-
+        
         url = f"{BASE_URL}/{model_name}:generateContent?key={api_key}"
 
         prompt = f"""
@@ -104,15 +167,23 @@ def analyze_failure(logs: str):
 
         response = requests.post(url, headers=headers, json=payload)
 
+        # Record successful API call
+        if response.status_code == 200:
+            record_api_call()
+
+        # Handle quota exceeded error
+        if response.status_code == 429:
+            return handle_quota_error()
+
         if response.status_code != 200:
             return {"error": response.text}
 
         result = response.json()
 
-        # ✅ Extract text safely
+        # Extract text safely
         text_output = result["candidates"][0]["content"]["parts"][0]["text"]
 
-        # ✅ Try parsing JSON from response
+        # Try parsing JSON from response
         try:
             json_start = text_output.find("{")
             json_end = text_output.rfind("}") + 1
