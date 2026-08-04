@@ -124,6 +124,11 @@ if result:
     if result and isinstance(result, dict) and result.get("auto_test_mode"):
         st.info("Running in test mode (rate limit protection)")
     
+    # Ensure result is valid before proceeding
+    if not result or not isinstance(result, dict):
+        st.error("Analysis returned invalid result")
+        st.stop()
+    
     st.success("Analysis Complete")
 
     st.subheader("Root Cause")
