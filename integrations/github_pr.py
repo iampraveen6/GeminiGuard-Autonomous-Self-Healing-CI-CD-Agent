@@ -12,36 +12,105 @@ def validate_fix_relevance(fix_description, logs):
         logs: The original CI/CD logs
         
     Returns:
-        tuple: (is_valid, validation_message, confidence_score)
+        tuple: (is_valid, validation_message, confidence_score, detailed_report)
     """
-    # Check if fix description contains technical details
-    technical_keywords = ['install', 'update', 'fix', 'change', 'modify', 'add', 'remove', 'configure', 'set']
-    has_technical_action = any(keyword in fix_description.lower() for keyword in technical_keywords)
+    # Detailed validation report
+    validation_report = {
+        'checks': [],
+        'score_breakdown': {},
+        'passed_checks': 0,
+        'failed_checks': 0
+    }
     
-    # Check if fix references specific files, packages, or configurations
-    file_references = ['requirements.txt', 'package.json', 'dockerfile', '.env', 'config', 'yaml', 'yml', 'json']
-    has_file_reference = any(ref in fix_description.lower() for ref in file_references)
+    # Check 1: Technical keywords
+    technical_keywords = ['install', 'update', 'fix', 'change', 'modify', 'add', 'remove', 'configure', 'set', 'enable', 'disable', 'implement', 'refactor']
+    found_keywords = [kw for kw in technical_keywords if kw in fix_description.lower()]
+    has_technical_action = len(found_keywords) > 0
     
-    # Check if fix description is substantial enough
-    is_substantial = len(fix_description) > 20
-    
-    # Calculate confidence score
-    confidence_score = 0
+    check_result = {
+        'name': 'Technical Action Keywords',
+        'status': 'PASS' if has_technical_action else 'FAIL',
+        'details': f"Found {len(found_keywords)} action keywords: {', '.join(found_keywords) if found_keywords else 'None'}",
+        'score': 30 if has_technical_action else 0
+    }
+    validation_report['checks'].append(check_result)
+    validation_report['score_breakdown']['technical_keywords'] = check_result['score']
     if has_technical_action:
-        confidence_score += 30
-    if has_file_reference:
-        confidence_score += 40
-    if is_substantial:
-        confidence_score += 30
+        validation_report['passed_checks'] += 1
+    else:
+        validation_report['failed_checks'] += 1
     
+    # Check 2: File references
+    file_references = ['requirements.txt', 'package.json', 'dockerfile', '.env', 'config', 'yaml', 'yml', 'json', 'py', 'js', 'ts', 'java', 'go', 'rs']
+    found_files = [ref for ref in file_references if ref in fix_description.lower()]
+    has_file_reference = len(found_files) > 0
+    
+    check_result = {
+        'name': 'File/Configuration References',
+        'status': 'PASS' if has_file_reference else 'FAIL',
+        'details': f"Found {len(found_files)} file references: {', '.join(found_files) if found_files else 'None'}",
+        'score': 40 if has_file_reference else 0
+    }
+    validation_report['checks'].append(check_result)
+    validation_report['score_breakdown']['file_references'] = check_result['score']
+    if has_file_reference:
+        validation_report['passed_checks'] += 1
+    else:
+        validation_report['failed_checks'] += 1
+    
+    # Check 3: Content substance
+    is_substantial = len(fix_description) > 20
+    is_very_substantial = len(fix_description) > 50
+    
+    substance_score = 10 if is_substantial else 0
+    if is_very_substantial:
+        substance_score = 20
+    
+    check_result = {
+        'name': 'Content Substance',
+        'status': 'PASS' if is_substantial else 'FAIL',
+        'details': f"Description length: {len(fix_description)} characters (min: 20)",
+        'score': substance_score
+    }
+    validation_report['checks'].append(check_result)
+    validation_report['score_breakdown']['content_substance'] = check_result['score']
+    if is_substantial:
+        validation_report['passed_checks'] += 1
+    else:
+        validation_report['failed_checks'] += 1
+    
+    # Check 4: Log relevance (bonus)
+    log_relevance_score = 0
+    if logs:
+        # Check if fix mentions errors from logs
+        log_keywords = ['error', 'failed', 'timeout', 'exception', 'missing', 'not found', 'connection']
+        found_log_keywords = [kw for kw in log_keywords if kw in logs.lower() and kw in fix_description.lower()]
+        if len(found_log_keywords) > 0:
+            log_relevance_score = 10
+        
+        check_result = {
+            'name': 'Log Relevance (Bonus)',
+            'status': 'PASS' if log_relevance_score > 0 else 'INFO',
+            'details': f"Found {len(found_log_keywords)} matching keywords in both logs and fix",
+            'score': log_relevance_score
+        }
+        validation_report['checks'].append(check_result)
+        validation_report['score_breakdown']['log_relevance'] = log_relevance_score
+    
+    # Calculate total confidence score
+    confidence_score = sum(validation_report['score_breakdown'].values())
+    
+    # Validation decision
     is_valid = confidence_score >= 50
     
+    # Generate detailed message
     if is_valid:
-        validation_message = f"Fix appears relevant (confidence: {confidence_score}%)"
+        validation_message = f"Fix appears relevant (confidence: {confidence_score}%) - {validation_report['passed_checks']}/{len(validation_report['checks'])} checks passed"
     else:
-        validation_message = f"Fix may not be actionable (confidence: {confidence_score}%)"
+        failed_check_names = [check['name'] for check in validation_report['checks'] if check['status'] == 'FAIL']
+        validation_message = f"Fix may not be actionable (confidence: {confidence_score}%) - Failed: {', '.join(failed_check_names)}"
     
-    return is_valid, validation_message, confidence_score
+    return is_valid, validation_message, confidence_score, validation_report
 
 
 def create_fix_pr(fix_description, logs=None, branch_type="feature"):
@@ -65,10 +134,16 @@ def create_fix_pr(fix_description, logs=None, branch_type="feature"):
         return "Missing GitHub configuration"
 
     # Validate fix relevance
-    is_valid, validation_message, confidence_score = validate_fix_relevance(fix_description, logs or "")
+    is_valid, validation_message, confidence_score, validation_report = validate_fix_relevance(fix_description, logs or "")
     
     if not is_valid:
-        return f"Validation failed: {validation_message}. Fix may not be actionable."
+        # Build detailed failure message
+        detailed_failure = f"Validation failed: {validation_message}\n\n**Detailed Report:**\n"
+        for check in validation_report['checks']:
+            icon = "✅" if check['status'] == 'PASS' else "❌"
+            detailed_failure += f"{icon} **{check['name']}** ({check['status']}): {check['details']}\n"
+        
+        return detailed_failure
 
     try:
         g = Github(GITHUB_TOKEN)
@@ -100,16 +175,32 @@ def create_fix_pr(fix_description, logs=None, branch_type="feature"):
 
         # Create more meaningful fix documentation
         file_path = "AI_FIX_NOTES.md"
+        
+        # Build detailed validation section
+        validation_details = "\n".join([
+            f"- **{check['name']}** ({check['status']}): {check['details']}" 
+            for check in validation_report['checks']
+        ])
+        
         content = f"""# AI-Generated Fix Notes
 
 ## Fix Description
 {fix_description}
 
-## Validation Information
-- **Validation Status:** {validation_message}
+## Validation Results
+- **Overall Status:** {'PASSED' if is_valid else 'FAILED'}
 - **Confidence Score:** {confidence_score}%
 - **Branch Type:** {branch_type}
 - **Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+## Detailed Validation Report
+{validation_details}
+
+## Score Breakdown
+- Technical Keywords: {validation_report['score_breakdown'].get('technical_keywords', 0)}%
+- File References: {validation_report['score_breakdown'].get('file_references', 0)}%
+- Content Substance: {validation_report['score_breakdown'].get('content_substance', 0)}%
+- Log Relevance: {validation_report['score_breakdown'].get('log_relevance', 0)}%
 
 ## Implementation Notes
 This fix was automatically generated by GeminiGuard based on CI/CD log analysis.
@@ -144,6 +235,11 @@ Please review and implement the suggested changes manually.
             print("Created new fix notes")
 
         # Create Pull Request with enhanced information
+        validation_details = "\n".join([
+            f"- **{check['name']}** ({check['status']}): {check['details']}" 
+            for check in validation_report['checks']
+        ])
+        
         pr = repo.create_pull(
             title=pr_title,
             body=f"""## AI-Generated Fix
@@ -152,6 +248,15 @@ Please review and implement the suggested changes manually.
 - **Status:** {validation_message}
 - **Confidence:** {confidence_score}%
 - **Branch Type:** {branch_type}
+
+### Detailed Validation Report
+{validation_details}
+
+### Score Breakdown
+- Technical Keywords: {validation_report['score_breakdown'].get('technical_keywords', 0)}%
+- File References: {validation_report['score_breakdown'].get('file_references', 0)}%
+- Content Substance: {validation_report['score_breakdown'].get('content_substance', 0)}%
+- Log Relevance: {validation_report['score_breakdown'].get('log_relevance', 0)}%
 
 ### Proposed Fix
 {fix_description}
@@ -175,7 +280,13 @@ This PR contains documentation for the AI-suggested fix. Please:
             base=base_branch
         )
 
-        return f"PR Created: {pr.html_url} (Validation: {validation_message})"
+        # Build detailed success message
+        detailed_success = f"PR Created: {pr.html_url}\n\n**Validation Summary:** {validation_message}\n\n**Detailed Report:**\n"
+        for check in validation_report['checks']:
+            icon = "✅" if check['status'] == 'PASS' else "❌"
+            detailed_success += f"{icon} **{check['name']}** ({check['status']}): {check['details']}\n"
+        
+        return detailed_success
 
     except Exception as e:
         return f"GitHub Error: {str(e)}"

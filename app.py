@@ -133,14 +133,42 @@ if result:
 
                 if "http" in pr_result:
                     st.success("PR Created Successfully!")
-                    st.markdown(f"[View Pull Request]({pr_result})")
                     
-                    # Show validation results
-                    if "Validation:" in pr_result:
-                        validation_part = pr_result.split("Validation:")[1].strip()
-                        st.info(f"Validation: {validation_part}")
+                    # Extract PR URL from detailed result
+                    pr_url = pr_result.split("\n\n")[0].split("PR Created: ")[1]
+                    st.markdown(f"[View Pull Request]({pr_url})")
+                    
+                    # Show detailed validation results
+                    if "Detailed Report:" in pr_result:
+                        with st.expander("Validation Report", expanded=True):
+                            detailed_part = pr_result.split("Detailed Report:")[1].strip()
+                            
+                            # Display each check with appropriate styling
+                            for line in detailed_part.split('\n'):
+                                if line.strip():
+                                    if '✅' in line:
+                                        st.success(line.strip())
+                                    elif '❌' in line:
+                                        st.error(line.strip())
+                                    else:
+                                        st.info(line.strip())
                 else:
-                    st.warning(pr_result)
+                    st.warning("PR Creation Failed")
+                    
+                    # Show detailed validation report for failures
+                    if "Detailed Report:" in pr_result:
+                        with st.expander("Validation Report", expanded=True):
+                            detailed_part = pr_result.split("Detailed Report:")[1].strip()
+                            
+                            # Display each check with appropriate styling
+                            for line in detailed_part.split('\n'):
+                                if line.strip():
+                                    if '✅' in line:
+                                        st.success(line.strip())
+                                    elif '❌' in line:
+                                        st.error(line.strip())
+                                    else:
+                                        st.info(line.strip())
 
         else:
             st.error("Fix validation failed")
