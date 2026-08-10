@@ -11,34 +11,75 @@ def categorize_error_type(logs, fix_description):
         tuple: (error_type, guidance_message)
         error_type: 'application', 'infrastructure', 'external', 'unknown'
     """
-    infrastructure_keywords = [
-        'pod', 'kubernetes', 'k8s', 'container', 'docker', 'pending', 
-        'unready', 'namespace', 'executor', 'runner', 'gitlab-runner',
-        'imagepull', 'crashloop', 'oomkilled', 'deadline', 'quota',
-        'infrastructure', 'network', 'dns', 'proxy', 'certificate'
-    ]
-    
-    external_service_keywords = [
-        'artifactory', 'jfrog', 'nexus', 'github', 'gitlab', 'bitbucket',
-        'sonarqube', 'jenkins', 'aws', 'azure', 'gcp', 'database',
-        'api gateway', 'service mesh', 'vault', 'ldap', 'sso'
-    ]
-    
     logs_lower = logs.lower() if logs else ""
     fix_lower = fix_description.lower()
     
-    # Check for infrastructure issues
+    # Check for actual build/compilation errors (highest priority)
+    build_error_keywords = [
+        'compilation failed', 'cannot find symbol', 'error: cannot find',
+        'cannot find symbol', 'symbol:   method', 'symbol:   class',
+        'compilation failure', 'build failed', ':compileJava FAILED',
+        'javac error', 'error: cannot access', 'package does not exist',
+        'class not found', 'method not found', 'illegal start of expression',
+        'incompatible types', 'cannot resolve symbol', 'missing return statement'
+    ]
+    
+    if any(kw in logs_lower for kw in build_error_keywords):
+        return 'application', "Build/compilation error detected. This is a code issue that can be fixed with PR."
+    
+    # Check for dependency issues
+    dependency_keywords = [
+        'module not found', 'no module named', 'import error',
+        'missing dependency', 'package not found', 'cannot import',
+        'dependency not found', 'unresolved dependency'
+    ]
+    
+    if any(kw in logs_lower for kw in dependency_keywords):
+        return 'application', "Dependency/Import error detected. This is a code issue that can be fixed with PR."
+    
+    # Check for syntax/code errors
+    syntax_error_keywords = [
+        'syntax error', 'unexpected token', 'unexpected end',
+        'indentationerror', 'invalid syntax', 'parse error',
+        'unexpected indent', 'dedent mismatch'
+    ]
+    
+    if any(kw in logs_lower for kw in syntax_error_keywords):
+        return 'application', "Syntax error detected. This is a code issue that can be fixed with PR."
+    
+    # Only categorize as infrastructure if NO build/compilation errors are found
+    infrastructure_keywords = [
+        'pod failed', 'pod crashloopbackoff', 'oomkilled', 'imagepullback',
+        'node not ready', 'insufficient resources', 'timeout waiting for pod',
+        'network unreachable', 'dns resolution failed', 'connection refused',
+        'certificate error', 'authentication failed'
+    ]
+    
     infrastructure_matches = sum(1 for kw in infrastructure_keywords if kw in logs_lower)
     if infrastructure_matches >= 2:
-        return 'infrastructure', "Infrastructure/CI/CD issue detected. This requires DevOps intervention rather than code changes."
+        # But check if the infrastructure was actually the cause (not just setup logs)
+        # If the job ran for a while and then failed, it's likely not infrastructure
+        job_ran_keywords = ['executing "step_script"', 'running on runner', 'getting source', 'compiling', 'building']
+        if any(kw in logs_lower for kw in job_ran_keywords):
+            # Infrastructure setup succeeded, failure happened later
+            return 'application', "Infrastructure setup succeeded, but build failed. This is a code issue."
+        else:
+            return 'infrastructure', "Infrastructure setup failed before code execution. This requires DevOps intervention."
     
     # Check for external service issues
+    external_service_keywords = [
+        'artifactory', 'jfrog', 'nexus', 'gitlab', 'github', 'bitbucket',
+        'sonarqube', 'jenkins', 'aws', 'azure', 'gcp', 'database',
+        'api gateway', 'service mesh', 'vault', 'ldap', 'sso',
+        'connection refused', 'timeout connecting', 'service unavailable'
+    ]
+    
     external_matches = sum(1 for kw in external_service_keywords if kw in logs_lower)
     if external_matches >= 2:
         return 'external', "External service issue detected. This may require service team coordination."
     
     # Check if fix suggests code changes
-    code_change_keywords = ['code', 'function', 'class', 'import', 'file', 'variable', 'method']
+    code_change_keywords = ['code', 'function', 'class', 'import', 'file', 'variable', 'method', 'class', 'interface']
     if any(kw in fix_lower for kw in code_change_keywords):
         return 'application', "Application code issue detected. Can be fixed with code changes."
     
