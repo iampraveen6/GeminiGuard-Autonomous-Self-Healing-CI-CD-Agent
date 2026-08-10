@@ -55,32 +55,12 @@ from core.fix_ranker import rank_fixes
 from memory.store import load_memory, save_memory
 from integrations.github_pr import create_fix_pr
 
-# Initialize session state for mode toggle
-if 'use_test_mode' not in st.session_state:
-    # Default to environment variable, or true if not set
-    st.session_state.use_test_mode = os.getenv("TEST_MODE", "true").lower() == "true"
-
 # Paths
 MEMORY_FILE = "memory_db.json"
 
 # ---------------- CONFIG ----------------
 st.set_page_config(page_title="GeminiGuard", layout="wide")
 st.title("GeminiGuard - AI Self-Healing CI/CD")
-
-# Mode toggle in sidebar
-with st.sidebar:
-    st.header("Settings")
-    use_test_mode = st.toggle(
-        "Test Mode",
-        value=st.session_state.use_test_mode,
-        help="Test Mode uses mock responses (no API quota). Production Mode uses real Gemini API."
-    )
-    st.session_state.use_test_mode = use_test_mode
-    
-    if use_test_mode:
-        st.info("Using Test Mode - Mock responses, no API quota")
-    else:
-        st.warning("Using Production Mode - Real Gemini API (consumes quota)")
 
 # ---------------- SESSION STATE ----------------
 if "analysis_result" not in st.session_state:
@@ -110,9 +90,8 @@ if st.button("Analyze"):
     if not logs.strip():
         st.warning("Please enter logs")
     else:
-        mode_text = "Test Mode" if st.session_state.use_test_mode else "Production Mode"
-        with st.spinner(f"Analyzing with Gemini ({mode_text})..."):
-            st.session_state.analysis_result = run_analysis(logs, st.session_state.use_test_mode)
+        with st.spinner("Analyzing with Gemini..."):
+            st.session_state.analysis_result = run_analysis(logs, test_mode=False)
 
 # Use stored result
 result = st.session_state.analysis_result

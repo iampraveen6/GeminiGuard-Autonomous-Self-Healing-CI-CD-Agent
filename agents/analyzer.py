@@ -2,7 +2,7 @@ import sys
 from core.gemini_client import analyze_failure
 
 
-def run_analysis(logs, test_mode=True):
+def run_analysis(logs, test_mode=False):
     try:
         print("Analyzing failure log...\n")
     except UnicodeEncodeError:
