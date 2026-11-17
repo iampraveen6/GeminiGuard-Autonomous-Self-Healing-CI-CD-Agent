@@ -16,7 +16,7 @@ The main implementation areas are:
 
 | Area | Files | What to verify |
 | --- | --- | --- |
-| CI orchestration | `.github/workflows/ci.yml` | Normal CI, `workflow_run`, permissions, and `ai-fix/*` recursion prevention |
+| CI orchestration | `.github/workflows/ci.yml`, `.github/workflows/autonomous-repair.yml` | Normal CI, `workflow_run`, permissions, and `ai-fix/*` recursion prevention |
 | CLI orchestration | `main.py`, `integrations/github_actions.py` | Event loading, agent execution, and audit persistence |
 | Repair flow | `agents/repair_agent.py` | Diagnosis, patch normalization, policy validation, test execution, and PR-only behavior |
 | Safety policy | `agents/policy.py`, `config/agent_policy.yaml` | Protected paths, editable extensions, file/line limits, and attempt limits |
@@ -182,7 +182,7 @@ Perform this only from a temporary branch. Do not deliberately break the default
    - `pull-requests: write`
 4. Create a harmless test failure on a branch that does not start with `ai-fix/`.
 5. Push the branch and open the failed normal CI run.
-6. Confirm the `workflow_run` event starts the `autonomous_repair` job.
+6. Confirm the `workflow_run` event starts the `repair` job in `.github/workflows/autonomous-repair.yml`.
 7. Inspect the repair job logs and verify:
    - The failed `head_sha` is checked out.
    - The failed logs are downloaded.

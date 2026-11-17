@@ -394,7 +394,7 @@ GeminiGuard now separates autonomous operations into two agents:
 
 The policy boundary is defined in `config/agent_policy.yaml`. Workflows and credentials
 are protected from agent edits, attempts are bounded, and each run is recorded as an
-audit entry. The `workflow_run` trigger in `.github/workflows/ci.yml` supplies real
+audit entry. The `workflow_run` trigger in `.github/workflows/autonomous-repair.yml` supplies real
 failure logs and prevents agent-created branches from recursively triggering repairs.
 
 To run the repair agent locally:
