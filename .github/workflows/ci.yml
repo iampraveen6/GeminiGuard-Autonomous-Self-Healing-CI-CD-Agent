@@ -4,6 +4,7 @@ on:
   push:
     branches: [ main ]
   pull_request:
+    branches: [ main ]
 
 jobs:
 
@@ -47,6 +48,7 @@ jobs:
           else
             echo "failed=false" >> $GITHUB_OUTPUT
           fi
+          exit "$EXIT_CODE"
 
       # ✅ Upload logs for next job
       - name: ✅ Upload logs
@@ -62,7 +64,7 @@ jobs:
   # ----------------------------------
   self_heal:
     needs: build
-    if: needs.build.outputs.test_failed == 'true'
+    if: always() && needs.build.outputs.test_failed == 'true' && !startsWith(github.head_ref || github.ref_name, 'ai-fix/')
 
     runs-on: ubuntu-latest
 
@@ -101,4 +103,5 @@ jobs:
         run: |
           source venv/bin/activate
           echo "📄 Reading Failure Logs..."
-          python main.py
+          cp "$GITHUB_EVENT_PATH" github_event.json
+          python main.py --event-file github_event.json || true

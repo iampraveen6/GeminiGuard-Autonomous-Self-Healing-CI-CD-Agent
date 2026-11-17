@@ -213,7 +213,8 @@ def analyze_failure(logs: str, test_mode=None):
         url = f"{BASE_URL}/{model_name}:generateContent?key={api_key}"
 
         prompt = f"""
-        Analyze CI/CD logs and return ONLY JSON:
+        Analyze CI/CD logs and return ONLY JSON. Do not invent a patch unless
+        the logs identify a concrete source-level failure:
 
         {{
           "root_cause": "...",
@@ -223,7 +224,9 @@ def analyze_failure(logs: str, test_mode=None):
               "confidence": 0.0,
               "risk": "low/medium/high"
             }}
-          ]
+          ],
+          "patch": "optional unified git diff, or empty string",
+          "error_type": "application|infrastructure|external|unknown"
         }}
 
         Logs:

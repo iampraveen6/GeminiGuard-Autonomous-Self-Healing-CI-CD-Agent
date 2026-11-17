@@ -11,6 +11,11 @@ from core.fix_ranker import rank_fixes
 from integrations.github_pr import create_fix_pr
 from memory.store import save_memory
 from agents.analyzer import run_analysis
+from agents.policy import AgentPolicy
+from agents.contracts import FailureEvent
+from agents.repair_agent import RepairAgent
+from agents.release_agent import DeploymentEvent, ReleaseAgent
+from agents.tools.repository import RepositoryTool
 
 
 
@@ -89,11 +94,43 @@ def test_full_pipeline():
     print("✅ Full pipeline test passed\n")
 
 
-# ⚠️ TEMPORARY — forces a failure to verify self_heal job triggers correctly.
-# Remove this function once you've confirmed the self-heal pipeline works end-to-end.
-def test_intentional_failure():
-    print("💥 Intentionally failing to trigger self_heal job...")
-    assert False, "Forcing a failure to trigger self-heal"
+def test_agent_policy_rejects_protected_files():
+    policy = AgentPolicy()
+    try:
+        policy.validate_changed_files([".github/workflows/ci.yml"])
+        assert False, "protected workflow should be rejected"
+    except ValueError:
+        pass
+
+
+def test_release_agent_dry_run_does_not_rollback():
+    agent = ReleaseAgent(lambda: False, lambda version: True, dry_run=True)
+    result = agent.observe(DeploymentEvent("deployment-1", "v2", "v1"))
+    assert result.status == "rollback_pending"
+    assert result.rollback_attempted is False
+
+
+def test_repair_agent_stops_without_executable_patch(tmp_path):
+    agent = RepairAgent(
+        root=str(tmp_path),
+        analysis=lambda logs, test_mode=None: {
+            "root_cause": "test failure",
+            "fixes": [{"description": "Fix test.py", "confidence": 0.9, "risk": "low"}],
+        },
+    )
+    result = agent.run(FailureEvent("owner/repo", "abc123", "AssertionError"))
+    assert result.status == "stopped"
+    assert "diff" in result.reason
+
+
+def test_repository_tool_rejects_deleted_workflow(tmp_path):
+    tool = RepositoryTool(str(tmp_path))
+    patch = "--- a/.github/workflows/ci.yml\n+++ /dev/null\n@@ -1 +0,0 @@\n-old\n"
+    try:
+        tool.apply_patch(patch)
+        assert False, "workflow deletion should be rejected"
+    except ValueError:
+        pass
 
 
 # ✅ MAIN RUNNER

@@ -380,3 +380,31 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ---
 
 **Built with ❤️ by [Praveen Kittur](https://github.com/iampraveen6)**
+
+## Autonomous Agents
+
+GeminiGuard now separates autonomous operations into two agents:
+
+- **Repair Agent** (`agents/repair_agent.py`) consumes a failed GitHub Actions event,
+  diagnoses it with Gemini, applies only a constrained unified diff, runs the configured
+  test command, and opens a PR. It never merges or deploys.
+- **Release Agent** (`agents/release_agent.py`) observes deployment health and supports
+  allow-listed rollback. It defaults to `dry_run` and only permits staging until a
+  deployment adapter and rollback policy are configured.
+
+The policy boundary is defined in `config/agent_policy.yaml`. Workflows and credentials
+are protected from agent edits, attempts are bounded, and each run is recorded as an
+audit entry. The `workflow_run` trigger in `.github/workflows/autonomous-repair.yml` supplies real
+failure logs and prevents agent-created branches from recursively triggering repairs.
+
+To run the repair agent locally:
+
+```bash
+python main.py --event-file github_event.json --patch-file candidate.patch
+```
+
+The patch must be a unified Git diff. A patch is published only after it applies cleanly
+and the validation command passes.
+
+For the complete local, synthetic, and GitHub Actions verification checklist, see
+[`VERIFICATION.md`](VERIFICATION.md).

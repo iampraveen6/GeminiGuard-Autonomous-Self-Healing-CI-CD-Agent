@@ -1,0 +1,51 @@
+name: GeminiGuard Autonomous Repair
+
+on:
+  workflow_run:
+    workflows: ["GeminiGuard CI/CD Pipeline"]
+    types: [completed]
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  repair:
+    if: >-
+      github.event.workflow_run.conclusion == 'failure' &&
+      !startsWith(github.event.workflow_run.head_branch, 'ai-fix/')
+    runs-on: ubuntu-latest
+    concurrency:
+      group: geminiguard-repair-${{ github.event.workflow_run.id }}
+      cancel-in-progress: false
+    permissions:
+      contents: write
+      actions: read
+      pull-requests: write
+    steps:
+      - name: Checkout failed revision
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Download failed logs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh run view "${{ github.event.workflow_run.id }}" --log > logs.txt
+          cp "$GITHUB_EVENT_PATH" github_event.json
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Diagnose and validate repair
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO_NAME: ${{ github.repository }}
+        run: python main.py --event-file github_event.json

@@ -1,4 +1,6 @@
 import os
+import re
+import subprocess
 from github import Github
 from datetime import datetime
 
@@ -385,3 +387,45 @@ This PR contains documentation for the AI-suggested fix. Please:
 
     except Exception as e:
         return f"GitHub Error: {str(e)}"
+
+def publish_validated_patch(event, patch, run, root="."):
+    """Commit an already validated local patch and open one PR."""
+    token = os.getenv("GITHUB_TOKEN")
+    repo_name = os.getenv("REPO_NAME") or os.getenv("GITHUB_REPO") or event.repository
+    if not token or not repo_name:
+        return {"status": "blocked", "reason": "missing GitHub configuration"}
+
+    slug = re.sub(r"[^a-z0-9-]+", "-", (event.fingerprint or "failure").lower()).strip("-")
+    branch = f"ai-fix/{event.sha[:10]}-{slug[:32]}"
+    try:
+        repo = Github(token).get_repo(repo_name)
+        existing = list(repo.get_pulls(state="open", head=f"{repo.owner.login}:{branch}"))
+        if existing:
+            return {"status": "existing", "url": existing[0].html_url}
+        subprocess.run(["git", "checkout", "-b", branch], cwd=root, check=True, capture_output=True, text=True)
+        changed_files = (run.validation.changed_files if run.validation else [])
+        if not changed_files:
+            return {"status": "blocked", "reason": "validated run did not report changed files"}
+        subprocess.run(["git", "add", "--", *changed_files], cwd=root, check=True, capture_output=True, text=True)
+        subprocess.run(
+            ["git", "-c", "user.name=GeminiGuard", "-c",
+             "user.email=geminiguard[bot]@users.noreply.github.com", "commit",
+             "-m", "fix: validated CI failure repair"],
+            cwd=root, check=True, capture_output=True, text=True,
+        )
+        remote = f"https://x-access-token:{token}@github.com/{repo_name}.git"
+        subprocess.run(["git", "push", remote, branch], cwd=root, check=True, capture_output=True, text=True)
+        pr = repo.create_pull(
+            title=f"GeminiGuard repair: {event.workflow or 'CI failure'}",
+            body=(
+                f"Automated repair for `{event.sha}`.\n\n"
+                f"Failure fingerprint: `{event.fingerprint}`\n"
+                f"Validation: `{run.validation.command if run.validation else 'unknown'}`\n\n"
+                "This PR was validated by GeminiGuard and is not merged automatically."
+            ),
+            head=branch,
+            base=repo.default_branch,
+        )
+        return {"status": "created", "url": pr.html_url, "branch": branch}
+    except Exception as exc:
+        return {"status": "error", "reason": str(exc)}

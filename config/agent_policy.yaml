@@ -1,0 +1,25 @@
+repair:
+  mode: pr_only
+  max_attempts: 3
+  max_changed_files: 5
+  max_changed_lines: 250
+  editable_patterns:
+    - "*.py"
+    - "*.js"
+    - "*.ts"
+    - "*.java"
+    - "*.go"
+    - "*.rs"
+  protected_patterns:
+    - ".github/workflows/*"
+    - ".env"
+    - ".env.*"
+    - "*.pem"
+    - "*.key"
+    - "config/agent_policy.yaml"
+
+release:
+  mode: dry_run
+  allowed_environments:
+    - staging
+  max_rollbacks: 1
