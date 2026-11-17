@@ -4,9 +4,7 @@ on:
   push:
     branches: [ main ]
   pull_request:
-  workflow_run:
-    workflows: ["GeminiGuard CI/CD Pipeline"]
-    types: [completed]
+    branches: [ main ]
 
 jobs:
 
@@ -14,7 +12,6 @@ jobs:
   # ✅ STEP 1: NORMAL BUILD + TEST JOB
   # ----------------------------------
   build:
-    if: github.event_name != 'workflow_run'
     runs-on: ubuntu-latest
 
     outputs:
@@ -51,6 +48,7 @@ jobs:
           else
             echo "failed=false" >> $GITHUB_OUTPUT
           fi
+          exit "$EXIT_CODE"
 
       # ✅ Upload logs for next job
       - name: ✅ Upload logs
@@ -66,7 +64,7 @@ jobs:
   # ----------------------------------
   self_heal:
     needs: build
-    if: github.event_name != 'workflow_run' && needs.build.outputs.test_failed == 'true' && !startsWith(github.ref, 'refs/heads/ai-fix/')
+    if: always() && needs.build.outputs.test_failed == 'true' && !startsWith(github.head_ref || github.ref_name, 'ai-fix/')
 
     runs-on: ubuntu-latest
 
@@ -105,37 +103,5 @@ jobs:
         run: |
           source venv/bin/activate
           echo "📄 Reading Failure Logs..."
-          python main.py --event-file github_event.json || true
-
-  autonomous_repair:
-    if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'failure' && !contains(github.event.workflow_run.head_branch, 'ai-fix/')
-    runs-on: ubuntu-latest
-    concurrency:
-      group: geminiguard-repair-${{ github.event.workflow_run.id }}
-      cancel-in-progress: false
-    permissions:
-      contents: write
-      actions: read
-      pull-requests: write
-    steps:
-      - name: Checkout failed revision
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.workflow_run.head_sha }}
-      - name: Download failed logs
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh run view "${{ github.event.workflow_run.id }}" --log > logs.txt || true
           cp "$GITHUB_EVENT_PATH" github_event.json
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-      - name: Diagnose failure
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          REPO_NAME: ${{ github.repository }}
-        run: python main.py --event-file github_event.json || true
+          python main.py --event-file github_event.json || true
