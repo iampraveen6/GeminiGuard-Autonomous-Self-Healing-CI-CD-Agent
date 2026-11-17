@@ -89,11 +89,12 @@ def rank_fixes(fixes):
 
     memory_data = load_memory()
 
-    for fix in fixes:
+    ranked_input = [dict(fix) for fix in fixes if isinstance(fix, dict)]
+    for fix in ranked_input:
         fix["_score"] = compute_score(fix, memory_data)
 
     ranked = sorted(
-        fixes,
+        ranked_input,
         key=lambda x: x["_score"],
         reverse=True
     )

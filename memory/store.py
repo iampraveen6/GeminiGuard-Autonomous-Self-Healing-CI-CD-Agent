@@ -1,5 +1,7 @@
 import json
 import os
+import tempfile
+from pathlib import Path
 
 DB_FILE = "memory_db.json"
 
@@ -42,11 +44,10 @@ def save_memory(entry):
 
     data = load_memory()
 
-    # ✅ Basic validation
-    if "selected_fix" not in entry:
+    # Support both legacy dashboard entries and autonomous agent audit records.
+    if "selected_fix" not in entry and "agent" not in entry:
         return
-
-    if "description" not in entry.get("selected_fix", {}):
+    if "selected_fix" in entry and "description" not in entry.get("selected_fix", {}):
         return
 
     if "status" not in entry:
@@ -55,8 +56,12 @@ def save_memory(entry):
     data.append(entry)
 
     try:
-        with open(DB_FILE, "w") as f:
+        target = Path(DB_FILE)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        with tempfile.NamedTemporaryFile("w", dir=target.parent, delete=False, encoding="utf-8") as f:
             json.dump(data, f, indent=4)
+            temporary = f.name
+        os.replace(temporary, target)
     except Exception as e:
         print(f"⚠️ Failed to save memory: {e}")
 

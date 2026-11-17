@@ -1,8 +1,9 @@
+import json
 import sys
 from core.gemini_client import analyze_failure
 
 
-def run_analysis(logs, test_mode=False):
+def run_analysis(logs, test_mode=None):
     try:
         print("Analyzing failure log...\n")
     except UnicodeEncodeError:
@@ -20,15 +21,5 @@ def run_analysis(logs, test_mode=False):
         import json
         parsed = json.loads(raw)
         return parsed
-    except Exception:
-        # fallback (never fail pipeline)
-        return {
-            "root_cause": "Unknown",
-            "fixes": [
-                {
-                    "description": raw,
-                    "confidence": 0.5,
-                    "risk": "medium"
-                }
-            ]
-        }
+    except (TypeError, ValueError, json.JSONDecodeError):
+        return {"error": "Model returned malformed structured output"}
